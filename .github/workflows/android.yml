@@ -2,8 +2,7 @@ name: Android CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   build:
@@ -22,12 +21,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Clean build
+        run: ./gradlew clean
+
       - name: Build debug APK
         run: ./gradlew assembleDebug -PweatherApiKey=${{ secrets.WEATHER_API_KEY }}
-        env:
-          WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
-
-      - name: Print environment variable
-        run: echo "WEATHER_API_KEY=$WEATHER_API_KEY"
-        env:
-          WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}

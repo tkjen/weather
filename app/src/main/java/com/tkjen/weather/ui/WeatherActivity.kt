@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.tkjen.weather.BuildConfig
 import com.tkjen.weather.R
 import com.tkjen.weather.data.api.DayForecast
 import com.tkjen.weather.data.api.HourlyWeather
@@ -55,7 +56,7 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather) {
             }
         }
         viewModel.loadWeather("Ho Chi Minh") // Thay thế bằng vị trí mặc định nếu không có quyền
-
+        Log.d("API_KEY", "WEATHER_API_KEY=${BuildConfig.WEATHER_API_KEY}")
         val sampleData = listOf(
             HourlyWeather("Now", R.drawable.ic_heavy_rain, "21°"),
             HourlyWeather("1AM", R.drawable.ic_thunderstorm, "20°"),

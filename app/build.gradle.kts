@@ -4,7 +4,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
-val apiKey: String = if (project.hasProperty("weatherApiKey")) project.property("weatherApiKey") as String else "default"
+
 android {
     namespace = "com.tkjen.weather"
     compileSdk = 35
@@ -17,8 +17,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        buildConfigField("String", "WEATHER_API_KEY", "\"${apiKey}\"")
+        val apiKey: String = if (project.hasProperty("weatherApiKey")) {
+            project.property("weatherApiKey") as String
+        } else {
+            "default"
+        }
+        buildConfigField("String", "WEATHER_API_KEY", "\"$apiKey\"")
 
     }
 
