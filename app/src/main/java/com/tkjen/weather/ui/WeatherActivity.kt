@@ -12,6 +12,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,12 +23,12 @@ import com.tkjen.weather.data.api.DayForecast
 import com.tkjen.weather.data.api.HourlyWeather
 import com.tkjen.weather.databinding.ActivityWeatherBinding
 import dagger.hilt.android.AndroidEntryPoint
-
 import javax.inject.Inject
 @AndroidEntryPoint
 class WeatherActivity : AppCompatActivity(R.layout.activity_weather) {
 
     private lateinit var binding: ActivityWeatherBinding
+    private val viewModel: WeatherViewModel by viewModels()
     @Inject
     lateinit var fusedLocationClient: FusedLocationProviderClient
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +37,25 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather) {
         binding = ActivityWeatherBinding.inflate(layoutInflater)
         setContentView(binding.root)
         checkAndRequestLocationPermissions()
+
+        viewModel.weather.observe(this) { response ->
+            val currentTemp = response.current.temp_c
+            val location = response.location.name
+
+            binding.tvLocation.text = "$location"
+            binding.tvTemperatureValue.text = "$currentTemp\u00B0"
+            binding.tvWeather.text = response.current.condition.text
+
+            // Forecast
+            val todayForecast = response.forecast?.forecastday?.firstOrNull()
+            todayForecast?.let {
+                val highTemp = it.day.maxtemp_c
+                val lowTemp = it.day.mintemp_c
+                binding.tvHighLowTemp.text = "H:${highTemp.toInt()}° L:${lowTemp.toInt()}°"
+            }
+        }
+        viewModel.loadWeather("Ho Chi Minh")
+
         val sampleData = listOf(
             HourlyWeather("Now", R.drawable.ic_heavy_rain, "21°"),
             HourlyWeather("1AM", R.drawable.ic_thunderstorm, "20°"),
