@@ -29,7 +29,6 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather) {
 
     private lateinit var binding: ActivityWeatherBinding
     private val viewModel: WeatherViewModel by viewModels()
-
     @Inject
     lateinit var fusedLocationClient: FusedLocationProviderClient
     override fun onCreate(savedInstanceState: Bundle?) {
