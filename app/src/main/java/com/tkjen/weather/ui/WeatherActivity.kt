@@ -29,6 +29,7 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather) {
 
     private lateinit var binding: ActivityWeatherBinding
     private val viewModel: WeatherViewModel by viewModels()
+
     @Inject
     lateinit var fusedLocationClient: FusedLocationProviderClient
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +55,7 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather) {
                 binding.tvHighLowTemp.text = "H:${highTemp.toInt()}° L:${lowTemp.toInt()}°"
             }
         }
-        viewModel.loadWeather("Ho Chi Minh")
+        viewModel.loadWeather("Ho Chi Minh") // Thay thế bằng vị trí mặc định nếu không có quyền
 
         val sampleData = listOf(
             HourlyWeather("Now", R.drawable.ic_heavy_rain, "21°"),

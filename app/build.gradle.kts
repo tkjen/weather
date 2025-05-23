@@ -12,11 +12,12 @@ android {
     defaultConfig {
         applicationId = "com.tkjen.weather"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "WEATHER_API_KEY", "\"${System.getenv("WEATHER_API_KEY") ?: "default"}\"")
     }
 
     buildTypes {
@@ -27,7 +28,14 @@ android {
                 "proguard-rules.pro"
             )
         }
+
     }
+
+    buildFeatures {
+        buildConfig = true
+        viewBinding = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -35,9 +43,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    viewBinding {
-        enable = true
-    }
+
+
+
 }
 val lifecycle_version = "2.9.0"
 val arch_version = "2.2.0"

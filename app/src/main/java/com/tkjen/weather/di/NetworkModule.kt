@@ -1,13 +1,12 @@
 package com.tkjen.weather.di
 
-import android.content.Context
-import com.tkjen.weather.R
+import com.tkjen.weather.BuildConfig
+
 import com.tkjen.weather.data.api.WeatherApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
@@ -34,7 +33,5 @@ object NetworkModule {
     @Provides
     @Singleton
     @Named("weather_api_key")
-    fun provideWeatherApiKey(@ApplicationContext context: Context): String {
-        return context.getString(R.string.weather_api_key)
-    }
+    fun provideWeatherApiKey(): String = BuildConfig.WEATHER_API_KEY
 }
