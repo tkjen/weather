@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="grey_text">#AEAEB2</color>
+    <color name="white_alpha_70">#B3FFFFFF</color> <!-- Trắng với 70% alpha -->
+    <color name="dark_panel_bg_color">#4D2C2C2E</color> <!-- Màu cho bg_rounded_dark_panel -->
+    <!-- Thêm các màu bạn sử dụng cho font, icon... -->
+    <color name="dark_cloud">#A9A9A9</color> <!-- Cho item_hour nếu bạn dùng -->
+    <color name="light_blue_accent">#4FC3F7</color> <!-- Ví dụ màu xanh dương nhạt -->
 </resources>

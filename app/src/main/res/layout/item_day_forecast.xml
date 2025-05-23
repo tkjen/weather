@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="12dp"
+   > <!-- Nền tối giống Apple Weather -->
+
+    <!-- Nội dung hàng dọc -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Tên ngày -->
+        <TextView
+            android:id="@+id/tv_day_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:text="Today"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:fontFamily="@font/sfr" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginHorizontal="8dp">
+            <ImageView
+                android:id="@+id/iv_weather_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:src="@drawable/ic_sun" />
+            <TextView
+                android:id="@+id/tv_precipitation_percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="60%"
+                android:text="70%"
+                android:textColor="@color/light_blue_accent"
+            android:textSize="12sp"
+            android:fontFamily="@font/sfr"
+            android:layout_marginTop="2dp"
+
+            tools:visibility="visible"
+            android:visibility="gone"/>
+
+        </LinearLayout>
+        <!-- Icon thời tiết -->
+
+
+        <!-- Nhiệt độ thấp -->
+        <TextView
+            android:id="@+id/tv_low_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15°"
+            android:textColor="#AEAEB2"
+            android:textSize="16sp"
+            android:fontFamily="@font/sfr"
+            android:layout_marginEnd="8dp" />
+
+        <!-- Thanh nhiệt kế -->
+        <FrameLayout
+            android:id="@+id/fl_temp_bar_container"
+            android:layout_width="0dp"
+            android:layout_height="8dp"
+            android:layout_weight="2.5"
+            android:layout_gravity="center_vertical">
+
+            <!-- Nền đen mờ -->
+            <View
+                android:id="@+id/view_temp_bar_base_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/ic_rectangle_black_transparent" />
+
+            <!-- Vạch nhiệt độ gradient -->
+            <View
+                android:id="@+id/view_temp_bar_gradient"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_temp_bar" />
+
+            <!-- Chấm nhiệt độ hiện tại -->
+            <View
+                android:id="@+id/view_temp_indicator_dot"
+                android:layout_width="10dp"
+                android:layout_height="8dp"
+                android:layout_gravity="center_vertical|start"
+                android:background="@drawable/ic_ellipse_white"
+                tools:layout_marginStart="45dp" />
+        </FrameLayout>
+
+        <!-- Nhiệt độ cao -->
+        <TextView
+            android:id="@+id/tv_high_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="29°"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:fontFamily="@font/sfr"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Line kẻ ngang bên dưới -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:background="#3A3A3C" />
+</LinearLayout>
