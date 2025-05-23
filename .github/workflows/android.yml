@@ -9,9 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -27,3 +24,5 @@ jobs:
 
       - name: Build debug APK
         run: ./gradlew assembleDebug
+        env:
+          WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
