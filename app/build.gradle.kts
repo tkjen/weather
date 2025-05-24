@@ -1,3 +1,6 @@
+import java.util.Properties
+
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -16,24 +19,47 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        // --- BẮT ĐẦU THÊM GỠ LỖI ---
         println(">>> [BUILD.GRADLE] Bắt đầu xử lý API Key...")
-        val apiKeyFromProperty: String? = if (project.hasProperty("weatherApiKey")) {
+
+    // Ưu tiên 1: Project property truyền từ command line hoặc CI/CD
+        var apiKey: String? = if (project.hasProperty("weatherApiKey")) {
             project.property("weatherApiKey") as? String
         } else {
             null
         }
 
-        val finalApiKey: String
-        if (apiKeyFromProperty != null && apiKeyFromProperty.isNotBlank()) {
-            finalApiKey = apiKeyFromProperty
-            println(">>> [BUILD.GRADLE] Đã tìm thấy project property 'weatherApiKey'. Giá trị: '$finalApiKey'")
+        if (!apiKey.isNullOrBlank()) {
+            println(">>> [BUILD.GRADLE] Đã tìm thấy project property 'weatherApiKey'. Giá trị: '$apiKey'")
         } else {
-            finalApiKey = "default_gradle_key" // Thay đổi giá trị mặc định này để phân biệt
-            println(">>> [BUILD.GRADLE] KHÔNG tìm thấy project property 'weatherApiKey' hoặc giá trị rỗng. Sử dụng giá trị mặc định: '$finalApiKey'")
+            println(">>> [BUILD.GRADLE] KHÔNG tìm thấy project property. Thử đọc từ local.properties...")
+
+            val localPropertiesFile = rootProject.file("local.properties")
+            if (localPropertiesFile.exists()) {
+                val props = Properties()
+                props.load(localPropertiesFile.inputStream())
+                apiKey = props.getProperty("weatherApiKey")
+
+                if (!apiKey.isNullOrBlank()) {
+                    println(">>> [BUILD.GRADLE] Đã tìm thấy 'weatherApiKey' trong local.properties. Giá trị: '$apiKey'")
+                } else {
+                    println(">>> [BUILD.GRADLE] Không tìm thấy hoặc rỗng trong local.properties.")
+                }
+            } else {
+                println(">>> [BUILD.GRADLE] File local.properties không tồn tại.")
+            }
         }
-        buildConfigField("String", "WEATHER_API_KEY", "\"$finalApiKey\"")
-        println(">>> [BUILD.GRADLE] Đã đặt buildConfigField WEATHER_API_KEY là: '$finalApiKey'")
+
+// Ưu tiên 3: fallback giá trị mặc định
+        if (apiKey.isNullOrBlank()) {
+            apiKey = "default_gradle_key"
+            println(">>> [BUILD.GRADLE] Sử dụng API key mặc định: '$apiKey'")
+        }
+
+// Gán vào BuildConfig
+        buildConfigField("String", "WEATHER_API_KEY", "\"$apiKey\"")
+        println(">>> [BUILD.GRADLE] Đã đặt buildConfigField WEATHER_API_KEY là: '$apiKey'")
+
+
 
     }
 
