@@ -225,11 +225,11 @@
                         <!-- Temperature Map Overlay -->
                         <ImageView
                             android:id="@+id/temperature_overlay"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/temperature_gradient_overlay"
+                            android:layout_width="312dp"
+                            android:layout_height="202dp"
+                            android:alpha="0.7"
                             android:scaleType="centerCrop"
-                            android:alpha="0.7" />
+                            android:src="@drawable/temperature_gradient_overlay" />
 
                         <!-- Map Lines/Borders -->
 

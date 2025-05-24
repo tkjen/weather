@@ -42,6 +42,8 @@ class WeatherViewModel @Inject constructor(
                     ?.hour
                     ?: emptyList()
 
+
+
                 val hourly = hours.map { hour ->
                     val formattedHour = hour.time.takeLast(5)
                     val temp = "${hour.temp_c.toInt()}°"
