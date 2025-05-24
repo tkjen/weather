@@ -1,4 +1,4 @@
-package com.tkjen.weather.data.api
+package com.tkjen.weather.data.local
 
 data class DayForecast(
     val dayName: String,

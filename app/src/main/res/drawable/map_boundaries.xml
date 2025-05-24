@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="120dp"
+    android:viewportWidth="200"
+    android:viewportHeight="120">
+
+    <!-- Simplified map boundary lines -->
+    <path
+        android:pathData="M20,40 Q60,35 100,45 T180,50"
+        android:strokeColor="#8B4513"
+        android:strokeWidth="1.5"
+
+        android:strokeAlpha="0.4" />
+
+    <path
+        android:pathData="M15,60 Q80,55 120,65 Q140,70 175,68"
+        android:strokeColor="#8B4513"
+        android:strokeWidth="1.5"
+
+        android:strokeAlpha="0.4" />
+
+    <path
+        android:pathData="M25,80 Q90,75 150,85 T185,90"
+        android:strokeColor="#8B4513"
+        android:strokeWidth="1.5"
+
+        android:strokeAlpha="0.4" />
+
+    <!-- Vertical boundaries -->
+    <path
+        android:pathData="M60,20 Q65,60 70,100"
+        android:strokeColor="#8B4513"
+        android:strokeWidth="1"
+
+        android:strokeAlpha="0.3" />
+
+    <path
+        android:pathData="M130,25 Q135,65 140,105"
+        android:strokeColor="#8B4513"
+        android:strokeWidth="1"
+
+        android:strokeAlpha="0.3" />
+</vector>

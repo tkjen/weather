@@ -3,7 +3,8 @@ package com.tkjen.weather.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.tkjen.weather.data.api.HourlyWeather
+import com.bumptech.glide.Glide
+import com.tkjen.weather.data.local.HourlyWeather
 import com.tkjen.weather.databinding.ItemHourBinding
 
 class HourlyWeatherAdapter(
@@ -13,8 +14,11 @@ class HourlyWeatherAdapter(
     inner class HourlyViewHolder(private val binding: ItemHourBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: HourlyWeather) {
             binding.tvHour.text = item.hour
-            binding.imgWeather.setImageResource(item.weatherIconRes)
             binding.tvTemp.text = item.temperature
+
+            Glide.with(binding.imgWeather.context)
+                .load(item.weatherIconUrl)
+                .into(binding.imgWeather)
 
         }
     }

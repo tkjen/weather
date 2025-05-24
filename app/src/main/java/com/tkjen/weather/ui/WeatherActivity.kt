@@ -20,8 +20,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tkjen.weather.BuildConfig
 import com.tkjen.weather.R
-import com.tkjen.weather.data.api.DayForecast
-import com.tkjen.weather.data.api.HourlyWeather
+import com.tkjen.weather.data.local.DayForecast
 import com.tkjen.weather.databinding.ActivityWeatherBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -57,29 +56,36 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather) {
         }
         viewModel.loadWeather("Ho Chi Minh") // Thay thế bằng vị trí mặc định nếu không có quyền
         Log.d("API_KEY", "WEATHER_API_KEY=${BuildConfig.WEATHER_API_KEY}")
-        val sampleData = listOf(
-            HourlyWeather("Now", R.drawable.ic_heavy_rain, "21°"),
-            HourlyWeather("1AM", R.drawable.ic_thunderstorm, "20°"),
-            HourlyWeather("2AM", R.drawable.ic_showers_with_sun, "19°"),
-            HourlyWeather("3AM", R.drawable.ic_light_rain, "18°"),
-            HourlyWeather("4AM", R.drawable.ic_partly_cloudy_night, "17°"),
-            HourlyWeather("5AM", R.drawable.ic_thunderstorm, "16°"),
-            HourlyWeather("6AM", R.drawable.ic_showers_with_sun, "15°"),
-        )
-        val forecastList = listOf(
-            DayForecast("Today", R.drawable.ic_sun, 0,15, 29, 21),
-            DayForecast("Mon", R.drawable.ic_heavy_rain,10, 18, 27, 23),
-            DayForecast("Tue", R.drawable.ic_light_rain, 0,20, 25, 24),
-            DayForecast("Wed", R.drawable.ic_heavy_rain,40, 19, 28, 22),
-        )
+//        val sampleData = listOf(
+//            HourlyWeather("Now", R.drawable.ic_heavy_rain, "21°"),
+//            HourlyWeather("1AM", R.drawable.ic_thunderstorm, "20°"),
+//            HourlyWeather("2AM", R.drawable.ic_showers_with_sun, "19°"),
+//            HourlyWeather("3AM", R.drawable.ic_light_rain, "18°"),
+//            HourlyWeather("4AM", R.drawable.ic_partly_cloudy_night, "17°"),
+//            HourlyWeather("5AM", R.drawable.ic_thunderstorm, "16°"),
+//            HourlyWeather("6AM", R.drawable.ic_showers_with_sun, "15°"),
+//        )
+//        val forecastList = listOf(
+//            DayForecast("Today", R.drawable.ic_sun, 0,15, 29, 21),
+//            DayForecast("Mon", R.drawable.ic_heavy_rain,10, 18, 27, 23),
+//            DayForecast("Tue", R.drawable.ic_light_rain, 0,20, 25, 24),
+//            DayForecast("Wed", R.drawable.ic_heavy_rain,40, 19, 28, 22),
+//        )
 
-        val adapterHourlyWeather = HourlyWeatherAdapter(sampleData)
-        binding.recyclerHourly.adapter = adapterHourlyWeather
-        binding.recyclerHourly.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        viewModel.hourlyList.observe(this) { list ->
+            val adapterHourlyList = HourlyWeatherAdapter(list)
+            binding.recyclerHourly.adapter = adapterHourlyList
+        }
+        viewModel.dailyForecast.observe(this){ list ->
+            val adapterDailyForeCast = ForecastAdapter(list)
+            binding.recyclerDailyForecast.adapter = adapterDailyForeCast
 
-        val adapterForecast = ForecastAdapter(forecastList)
-        binding.recyclerDailyForecast.adapter = adapterForecast
-        binding.recyclerDailyForecast.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        }
+
+
+//        val adapterForecast = ForecastAdapter(forecastList)
+//        binding.recyclerDailyForecast.adapter = adapterForecast
+//        binding.recyclerDailyForecast.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
     }
     private val requestLocationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->

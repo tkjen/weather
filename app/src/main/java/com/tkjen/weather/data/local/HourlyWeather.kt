@@ -1,8 +1,8 @@
-package com.tkjen.weather.data.api
+package com.tkjen.weather.data.local
 
 data class HourlyWeather(
     val hour: String,
-    val weatherIconRes: Int,
+    val weatherIconUrl: String,
     val temperature: String
 )
 

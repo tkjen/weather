@@ -12,7 +12,11 @@ class WeatherRepository @Inject constructor(
         return api.getCurrentWeather(apiKey, location)
     }
     suspend fun getForecastWeather(location: String): WeatherResponse {
-        return api.getForecastWeather(apiKey, location)
+        return api.getForecastWeather(apiKey, location,1)
     }
+    suspend fun getForecastWeather(location: String, days: Int = 10): WeatherResponse {
+        return api.getForecastWeather(apiKey, location, days)
+    }
+
 
 }
