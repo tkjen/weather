@@ -16,13 +16,24 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        val apiKey: String = if (project.hasProperty("weatherApiKey")) {
-            project.property("weatherApiKey") as String
+        // --- BẮT ĐẦU THÊM GỠ LỖI ---
+        println(">>> [BUILD.GRADLE] Bắt đầu xử lý API Key...")
+        val apiKeyFromProperty: String? = if (project.hasProperty("weatherApiKey")) {
+            project.property("weatherApiKey") as? String
         } else {
-            "default"
+            null
         }
-        buildConfigField("String", "WEATHER_API_KEY", "\"$apiKey\"")
+
+        val finalApiKey: String
+        if (apiKeyFromProperty != null && apiKeyFromProperty.isNotBlank()) {
+            finalApiKey = apiKeyFromProperty
+            println(">>> [BUILD.GRADLE] Đã tìm thấy project property 'weatherApiKey'. Giá trị: '$finalApiKey'")
+        } else {
+            finalApiKey = "default_gradle_key" // Thay đổi giá trị mặc định này để phân biệt
+            println(">>> [BUILD.GRADLE] KHÔNG tìm thấy project property 'weatherApiKey' hoặc giá trị rỗng. Sử dụng giá trị mặc định: '$finalApiKey'")
+        }
+        buildConfigField("String", "WEATHER_API_KEY", "\"$finalApiKey\"")
+        println(">>> [BUILD.GRADLE] Đã đặt buildConfigField WEATHER_API_KEY là: '$finalApiKey'")
 
     }
 

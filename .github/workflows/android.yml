@@ -16,13 +16,24 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '17' # Bạn có thể dùng 11 nếu Java 11 là target của bạn
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Clean build
         run: ./gradlew clean
+
+      # --- BẮT ĐẦU THÊM BƯỚC GỠ LỖI ---
+      - name: DEBUG - Echo Secret Value
+        run: |
+          echo "Giá trị từ secrets.WEATHER_API_KEY là: ${{ secrets.WEATHER_API_KEY }}"
+          if [ -z "${{ secrets.WEATHER_API_KEY }}" ]; then
+            echo "LỖI: secrets.WEATHER_API_KEY RỖNG HOẶC KHÔNG TỒN TẠI!"
+          else
+            echo "THÀNH CÔNG: secrets.WEATHER_API_KEY có giá trị."
+          fi
+      # --- KẾT THÚC THÊM BƯỚC GỠ LỖI ---
 
       - name: Build debug APK
         run: ./gradlew assembleDebug -PweatherApiKey=${{ secrets.WEATHER_API_KEY }}
