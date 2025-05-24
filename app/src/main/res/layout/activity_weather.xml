@@ -169,8 +169,7 @@
                 android:layout_height="20dp"
 
                 />
-            <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
@@ -233,13 +232,6 @@
                             android:alpha="0.7" />
 
                         <!-- Map Lines/Borders -->
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/map_boundaries"
-                            android:scaleType="centerCrop"
-                            android:alpha="0.3"
-                            app:tint="#8B4513" />
 
                         <!-- Location Marker -->
                         <FrameLayout
@@ -265,6 +257,14 @@
                                     android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:gravity="center" />
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:alpha="0.3"
+                                    android:scaleType="centerCrop"
+                                    android:src="@drawable/map_boundaries"
+                                    app:tint="#8B4513" />
 
                             </androidx.cardview.widget.CardView>
 

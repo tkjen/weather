@@ -45,7 +45,7 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather) {
             binding.tvLocation.text = "$location"
             binding.tvTemperatureValue.text = "$currentTemp\u00B0"
             binding.tvWeather.text = response.current.condition.text
-
+            binding.locationTemperature.text = " $currentTemp"
             // Forecast
             val todayForecast = response.forecast?.forecastday?.firstOrNull()
             todayForecast?.let {
