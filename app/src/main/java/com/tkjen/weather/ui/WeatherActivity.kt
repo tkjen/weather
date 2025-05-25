@@ -16,6 +16,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tkjen.weather.BuildConfig
 import com.tkjen.weather.R
@@ -28,12 +34,13 @@ import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 @AndroidEntryPoint
-class WeatherActivity : AppCompatActivity(R.layout.activity_weather) {
+class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReadyCallback {
 
     private lateinit var binding: ActivityWeatherBinding
     private val viewModel: WeatherViewModel by viewModels()
     @Inject
     lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var mapView: MapView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -113,7 +120,7 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather) {
 
 
 
-        viewModel.loadWeather("Ho Chi Minh") // Thay thế bằng vị trí mặc định nếu không có quyền
+      //  viewModel.loadWeather("Ho Chi Minh") // Thay thế bằng vị trí mặc định nếu không có quyền
         Log.d("API_KEY", "WEATHER_API_KEY=${BuildConfig.WEATHER_API_KEY}")
 
 
@@ -126,9 +133,59 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather) {
             binding.recyclerDailyForecast.adapter = adapterDailyForeCast
 
         }
+        mapView = binding.mapView
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this)
+        binding.mapView.setOnClickListener {
+            openMapWithCurrentLocation()
+        }
+        binding.seemore.setOnClickListener{
+            openMapWithCurrentLocation()
+        }
 
 
     }
+
+    @SuppressLint("MissingPermission")
+    override fun onMapReady(googleMap: GoogleMap) {
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                val currentLatLng = LatLng(location.latitude, location.longitude)
+                googleMap.apply {
+                    uiSettings.isZoomControlsEnabled = true
+                    addMarker(MarkerOptions().position(currentLatLng).title("Your Location"))
+                    moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14f))
+                }
+            } else {
+                Toast.makeText(this, "Không thể lấy vị trí", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun openMapWithCurrentLocation() {
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    val latitude = location.latitude
+                    val longitude = location.longitude
+                    val gmmIntentUri = Uri.parse("geo:$latitude,$longitude?q=$latitude,$longitude(My Location)")
+                    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                    mapIntent.setPackage("com.google.android.apps.maps")
+                    if (mapIntent.resolveActivity(packageManager) != null) {
+                        startActivity(mapIntent)
+                    } else {
+                        Toast.makeText(this, "Google Maps not installed", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this, "Không lấy được vị trí hiện tại", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Lấy vị trí thất bại", Toast.LENGTH_SHORT).show()
+            }
+    }
+
     private val requestLocationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val fineLocationGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
@@ -198,16 +255,18 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather) {
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
                 if (location != null) {
-                    val latLon = "${location.latitude},${location.longitude}"
+                    val latLon = "${location.latitude} , ${location.longitude}"
                     Log.d("WeatherActivity", "Fetched location: $latLon")
                     // Gọi ViewModel để tải thời tiết với vị trí này
                     // viewModel.getCurrentWeather(latLon)
+                    viewModel.loadWeather(latLon)
                     Toast.makeText(this, "Location: $latLon", Toast.LENGTH_SHORT).show() // Ví dụ hiển thị
                 } else {
                     Log.w("WeatherActivity", "Last location is null.")
                     Toast.makeText(this, "Could not retrieve current location.", Toast.LENGTH_LONG).show()
                     // Cân nhắc: Tải dữ liệu mặc định
                     // viewModel.getCurrentWeather("Hanoi")
+                    viewModel.loadWeather("Ho Chi Minh")
                 }
             }
             .addOnFailureListener { e ->

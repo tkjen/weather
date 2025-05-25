@@ -223,13 +223,15 @@
                         android:clipToOutline="true">
 
                         <!-- Temperature Map Overlay -->
-                        <ImageView
-                            android:id="@+id/temperature_overlay"
-                            android:layout_width="312dp"
-                            android:layout_height="202dp"
-                            android:alpha="0.7"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/temperature_gradient_overlay" />
+                        <com.google.android.gms.maps.MapView
+                            android:id="@+id/mapView"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_marginHorizontal="16dp"
+                            android:layout_marginBottom="16dp"
+                            android:background="@drawable/temperature_map_background"
+                            android:clipToOutline="true" />
+
 
                         <!-- Map Lines/Borders -->
 
@@ -241,6 +243,7 @@
 
                             <!-- Temperature Circle -->
                             <androidx.cardview.widget.CardView
+                                android:id="@+id/cv_location_temperature"
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
                                 app:cardCornerRadius="22dp"
@@ -290,6 +293,7 @@
 
                     <!-- Footer Section -->
                     <LinearLayout
+                        android:id="@+id/seemore"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
@@ -720,9 +724,9 @@
                                 android:id="@+id/expected_rainfall"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="4 mm expected\nin next 24h."
+                                android:text="4 mm expected in next 24h."
                                 android:textColor="#FFFFFF"
-                                android:textSize="14sp"
+                                android:textSize="11sp"
                                 android:lineSpacingExtra="2dp" />
 
                         </LinearLayout>

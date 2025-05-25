@@ -19,6 +19,8 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = project.findProperty("GOOGLE_MAPS_API_KEY") ?: ""
+
         println(">>> [BUILD.GRADLE] Bắt đầu xử lý API Key...")
 
     // Ưu tiên 1: Project property truyền từ command line hoặc CI/CD
@@ -131,5 +133,7 @@ dependencies {
     //
     implementation("com.github.bumptech.glide:glide:4.16.0")
     ksp("com.github.bumptech.glide:compiler:4.16.0")
+
+    implementation("com.google.maps.android:android-maps-utils:3.10.0")
 
 }

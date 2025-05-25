@@ -36,4 +36,5 @@ jobs:
       # --- KẾT THÚC THÊM BƯỚC GỠ LỖI ---
 
       - name: Build debug APK
-        run: ./gradlew assembleDebug -PweatherApiKey=${{ secrets.WEATHER_API_KEY }}
+        run: ./gradlew assembleDebug -PweatherApiKey=${{ secrets.WEATHER_API_KEY }} -PGOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}
+
