@@ -19,6 +19,5 @@ data class Current(
     val precip_mm: Double,
 
 
-){
+)
 
-}

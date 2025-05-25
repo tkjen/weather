@@ -385,7 +385,7 @@
                     android:id="@+id/rainfall_period"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="in last 24h"
+                    android:text="at current time"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:layout_marginBottom="16dp" />

@@ -63,8 +63,6 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
             val sunset = todayAstro?.sunset ?: "--:--"
 
             val hours = response.forecast?.forecastday?.firstOrNull()?.hour ?: emptyList()
-            val totalPrecipNext24h = hours.take(24).sumOf { it.precip_mm }
-            binding.expectedRainfall.text = "Forecast: ${"%.1f".format(totalPrecipNext24h)} mm in next 24h."
 
             val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
             val currentEpochMillis = System.currentTimeMillis()
@@ -85,7 +83,14 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
 
             val uv = response.current.uv
             val fealsLike = response.current.feelslike_c
+            // tong luong mua trong ngay
             val rainfall = response.forecast?.forecastday?.firstOrNull()?.day?.totalprecip_mm ?: 0.0
+
+            val currentPrecip = response.current.precip_mm
+            val forecastPrecip = response.forecast?.forecastday?.get(0)?.day?.totalprecip_mm
+
+            binding.currentRainfall.text = "$currentPrecip mm"
+            binding.expectedRainfall.text = "$forecastPrecip mm expected in next 24h."
             val windSpeed = response.current.wind_kph
             val windDegree = response.current.wind_degree.toFloat()
             val humidity = response.current.humidity
@@ -99,7 +104,7 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
             binding.uvLevel.text = uiLevel
             binding.humidityValue.text = "$humidity%"
 
-            binding.currentRainfall.text = "$rainfall mm"
+          //  binding.currentRainfall.text = "$rainfall mm"
             binding.windSpeed.text = windSpeed.toString()
 
             binding.windDirectionArrow.rotation = (windDegree + 180) % 360
