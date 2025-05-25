@@ -13,6 +13,9 @@ import com.tkjen.weather.data.model.HourWeather
 import com.tkjen.weather.data.model.WeatherResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -113,6 +116,36 @@ class WeatherViewModel @Inject constructor(
             }
         }
     }
+
+    fun getUIlevel(uv:Double): String {
+        return when
+        {
+            uv <= 2 -> "Low"
+            uv <= 5 -> "Moderate"
+            uv <= 7 -> "High"
+            uv <= 10 -> "Very High"
+            else -> "Extreme"
+        }
+
+    }
+    fun calculateDayDuration(sunrise: String?, sunset: String?): String {
+        if (sunrise == null || sunset == null) return "--:--"
+
+        return try {
+            val formatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
+            val sunriseTime = formatter.parse(sunrise)
+            val sunsetTime = formatter.parse(sunset)
+
+            val durationMillis = sunsetTime.time - sunriseTime.time
+            val hours = TimeUnit.MILLISECONDS.toHours(durationMillis)
+            val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis) % 60
+
+            String.format("%02d:%02d", hours, minutes)
+        } catch (e: Exception) {
+            "--:--"
+        }
+    }
+
 
 
 

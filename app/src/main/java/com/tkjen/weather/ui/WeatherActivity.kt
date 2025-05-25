@@ -15,14 +15,17 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tkjen.weather.BuildConfig
 import com.tkjen.weather.R
-import com.tkjen.weather.data.local.DayForecast
+import java.text.SimpleDateFormat
+import java.util.*
 import com.tkjen.weather.databinding.ActivityWeatherBinding
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 @AndroidEntryPoint
 class WeatherActivity : AppCompatActivity(R.layout.activity_weather) {
@@ -41,26 +44,63 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather) {
         viewModel.weather.observe(this) { response ->
             val currentTemp = response.current.temp_c
             val location = response.location.name
-
+            val content = response.current.condition.text
             binding.tvLocation.text = "$location"
             binding.tvTemperatureValue.text = "$currentTemp\u00B0"
-            binding.tvWeather.text = response.current.condition.text
+            binding.tvWeather.text = "$content"
             binding.locationTemperature.text = " $currentTemp"
 
             // Forecast
             val todayAstro = response.forecast?.forecastday?.firstOrNull()?.astro
             val sunrise = todayAstro?.sunrise ?: "--:--"
-            val uv = response.forecast
-                ?.forecastday
-                ?.firstOrNull()
-                ?.day
-                ?.uv
+            val sunset = todayAstro?.sunset ?: "--:--"
 
-            val rainfall = response.current.feelslike_c
+            val hours = response.forecast?.forecastday?.firstOrNull()?.hour ?: emptyList()
+            val totalPrecipNext24h = hours.take(24).sumOf { it.precip_mm }
+            binding.expectedRainfall.text = "Forecast: ${"%.1f".format(totalPrecipNext24h)} mm in next 24h."
 
-            binding.currentRainfall.text = "$rainfall"
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            val currentEpochMillis = System.currentTimeMillis()
+
+            val currentHourData = hours.minByOrNull { hourItem ->
+                val date = sdf.parse(hourItem.time)
+                val epochMillis = date?.time ?: 0L
+                kotlin.math.abs(epochMillis - currentEpochMillis)
+            }
+            currentHourData?.let {
+                val dewPointC = it.dewpoint_c
+                val dewPointF = it.dewpoint_f
+                Log.d("Weather", "Current dew point:: $dewPointC °C / $dewPointF °F lúc ${it.time}")
+                binding.contenthumidity.text = "Current dew point: $dewPointC °C "
+            }
+
+
+
+            val uv = response.current.uv
+            val fealsLike = response.current.feelslike_c
+            val rainfall = response.forecast?.forecastday?.firstOrNull()?.day?.totalprecip_mm ?: 0.0
+            val windSpeed = response.current.wind_kph
+            val windDegree = response.current.wind_degree.toFloat()
+            val humidity = response.current.humidity
+
+            val uiLevel = viewModel.getUIlevel(uv)
+
+            val progressPercent = ((uv / 11f) * 100).toInt().coerceIn(0, 100)
+            binding.sunsetTime.text = "$sunset"
+            Log.d("WeatherActivity", "Sunrise: $sunrise, Sunset: $sunset")
+            binding.uvProgress.progress = progressPercent
+            binding.uvLevel.text = uiLevel
+            binding.humidityValue.text = "$humidity%"
+
+            binding.currentRainfall.text = "$rainfall mm"
+            binding.windSpeed.text = windSpeed.toString()
+
+            binding.windDirectionArrow.rotation = (windDegree + 180) % 360
+            binding.feelsLike.text = "$fealsLike\u00B0"
             binding.uvValue.text = "$uv"
             binding.sunriseTime.text = "$sunrise"
+            binding.contentfeelsLike.text = "$content - Feels like $fealsLike\u00B0"
+
             val todayForecast = response.forecast?.forecastday?.firstOrNull()
             todayForecast?.let {
                 val highTemp = it.day.maxtemp_c
@@ -69,7 +109,11 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather) {
 
             }
         }
-        viewModel.loadWeather("Chile") // Thay thế bằng vị trí mặc định nếu không có quyền
+
+
+
+
+        viewModel.loadWeather("Ho Chi Minh") // Thay thế bằng vị trí mặc định nếu không có quyền
         Log.d("API_KEY", "WEATHER_API_KEY=${BuildConfig.WEATHER_API_KEY}")
 
 

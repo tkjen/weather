@@ -474,6 +474,7 @@
                                 android:textStyle="normal"
                                 android:layout_marginBottom="12dp" />
 
+
                             <!-- Sun Arc Visual -->
                             <FrameLayout
                                 android:layout_width="match_parent"
@@ -495,6 +496,7 @@
                                     android:layout_marginStart="20dp"
                                     android:layout_marginBottom="2dp" />
 
+
                             </FrameLayout>
 
                             <!-- Sunset Time -->
@@ -502,9 +504,11 @@
                                 android:id="@+id/sunset_time"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Sunset: 6:10PM"
+                                android:text="6:10PM"
                                 android:textColor="#FFFFFF"
-                                android:textSize="14sp" />
+                                android:textSize="14sp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="2dp" />
 
                         </LinearLayout>
 
@@ -628,9 +632,10 @@
                                     android:layout_height="wrap_content"
                                     android:text="1"
                                     android:textColor="#FFFFFF"
-                                    android:textSize="20sp"
+                                    android:textSize="13sp"
                                     android:textStyle="bold"
-                                    android:layout_gravity="center" />
+                                    android:layout_marginTop="10dp"
+                                    android:layout_gravity="center_horizontal|bottom" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -694,7 +699,7 @@
                                 android:id="@+id/current_rainfall"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="0 mm"
+                                android:text="3 mm"
                                 android:textColor="#FFFFFF"
                                 android:textSize="32sp"
                                 android:textStyle="normal"
@@ -825,13 +830,13 @@
                                 <ImageView
                                     android:layout_width="16dp"
                                     android:layout_height="16dp"
-                                    android:src="@drawable/ic_rainfall"
+                                    android:src="@drawable/ic_humidty"
                                     app:tint="#8E8E93" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="RAINFALL"
+                                    android:text="HUMIDITY"
                                     android:textColor="#8E8E93"
                                     android:textSize="12sp"
                                     android:textStyle="bold"
@@ -840,9 +845,9 @@
 
                             </LinearLayout>
 
-                            <!-- Current Rainfall -->
+
                             <TextView
-                                android:id="@+id/rainfall"
+                                android:id="@+id/humidity_value"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="71%"
@@ -853,12 +858,12 @@
 
 
                             <TextView
-                                android:id="@+id/contentrainfall"
+                                android:id="@+id/contenthumidity"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="The dew point is 16° right now."
                                 android:textColor="#FFFFFF"
-                                android:textSize="14sp"
+                                android:textSize="15sp"
                                 android:lineSpacingExtra="2dp" />
 
                         </LinearLayout>
