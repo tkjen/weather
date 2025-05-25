@@ -12,7 +12,7 @@
         app:lottie_rawRes="@raw/rain"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
-        android:visibility="gone"
+        android:visibility="invisible"
         android:alpha="0.6" />
 
 

@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -30,6 +31,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import com.tkjen.weather.databinding.ActivityWeatherBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 @AndroidEntryPoint
 class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReadyCallback {
@@ -56,16 +58,6 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
             binding.tvTemperatureValue.text = "$currentTemp\u00B0"
             binding.tvWeather.text = "$content"
             binding.locationTemperature.text = " $currentTemp"
-
-            if(binding.tvWeather.text.contains("Rain", ignoreCase = true))
-            {
-                binding.rainAnimation.visibility = View.VISIBLE
-                binding.rainAnimation.playAnimation()
-            }else
-            {
-                binding.rainAnimation.visibility = View.GONE
-                binding.rainAnimation.cancelAnimation()
-            }
 
 
 
@@ -134,7 +126,41 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
             }
         }
 
+        lifecycleScope.launch {
+            val isRain =binding.tvWeather.text.contains("Rain", ignoreCase = true)
+            val isThunder = binding.tvWeather.text.contains("Thunder", ignoreCase = true) || binding.tvWeather.text.contains("Storm", ignoreCase = true)
 
+            when {
+                isRain && isThunder -> {
+                    binding.rainAnimation.visibility = View.VISIBLE
+                    binding.rainAnimation.playAnimation()
+
+                    binding.thunderAnimation.visibility = View.VISIBLE
+                    binding.thunderAnimation.playAnimation()
+                }
+                isThunder -> {
+                    binding.rainAnimation.visibility = View.GONE
+                    binding.rainAnimation.cancelAnimation()
+
+                    binding.thunderAnimation.visibility = View.VISIBLE
+                    binding.thunderAnimation.playAnimation()
+                }
+                isRain -> {
+                    binding.rainAnimation.visibility = View.VISIBLE
+                    binding.rainAnimation.playAnimation()
+
+                    binding.thunderAnimation.visibility = View.GONE
+                    binding.thunderAnimation.cancelAnimation()
+                }
+                else -> {
+                    binding.rainAnimation.visibility = View.GONE
+                    binding.rainAnimation.cancelAnimation()
+
+                    binding.thunderAnimation.visibility = View.GONE
+                    binding.thunderAnimation.cancelAnimation()
+                }
+            }
+        }
 
 
       //  viewModel.loadWeather("Ho Chi Minh") // Thay thế bằng vị trí mặc định nếu không có quyền

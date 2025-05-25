@@ -27,9 +27,18 @@
             app:lottie_rawRes="@raw/rain"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            android:visibility="invisible"
+            android:visibility="visible"
             android:alpha="0.4" />
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/thunderAnimation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:lottie_rawRes="@raw/thunder"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            android:visibility="visible"
+            android:alpha="0.4" />
         <!-- Nội dung chính -->
         <LinearLayout
             android:id="@+id/line1"
