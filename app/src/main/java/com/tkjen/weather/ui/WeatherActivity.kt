@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,9 +30,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import com.tkjen.weather.databinding.ActivityWeatherBinding
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 @AndroidEntryPoint
 class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReadyCallback {
@@ -56,11 +54,21 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
             binding.tvLocation.text = "$location"
             binding.locationName.text = "$location"
             binding.tvTemperatureValue.text = "$currentTemp\u00B0"
-            binding.tvWeather.text = "$forecastdayText"
+            binding.tvWeather.text = "$content"
             binding.locationTemperature.text = " $currentTemp"
 
+            if(binding.tvWeather.text.contains("Rain", ignoreCase = true))
+            {
+                binding.rainAnimation.visibility = View.VISIBLE
+                binding.rainAnimation.playAnimation()
+            }else
+            {
+                binding.rainAnimation.visibility = View.GONE
+                binding.rainAnimation.cancelAnimation()
+            }
 
-            binding.tvCondition.text
+
+
             // Forecast
             val todayAstro = response.forecast?.forecastday?.firstOrNull()?.astro
             val sunrise = todayAstro?.sunrise ?: "--:--"

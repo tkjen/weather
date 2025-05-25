@@ -135,5 +135,6 @@ dependencies {
     ksp("com.github.bumptech.glide:compiler:4.16.0")
 
     implementation("com.google.maps.android:android-maps-utils:3.10.0")
-
+//
+    implementation ("com.airbnb.android:lottie:6.4.0")
 }
