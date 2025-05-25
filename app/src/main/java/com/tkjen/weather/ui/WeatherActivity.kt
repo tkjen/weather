@@ -56,6 +56,9 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather) {
                 ?.day
                 ?.uv
 
+            val rainfall = response.current.feelslike_c
+
+            binding.currentRainfall.text = "$rainfall"
             binding.uvValue.text = "$uv"
             binding.sunriseTime.text = "$sunrise"
             val todayForecast = response.forecast?.forecastday?.firstOrNull()
