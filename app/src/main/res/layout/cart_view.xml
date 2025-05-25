@@ -71,11 +71,14 @@
                 android:alpha="0.3"
                 app:tint="#8B4513" />
 
+
             <!-- Location Marker -->
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
 
                 <!-- Temperature Circle -->
                 <androidx.cardview.widget.CardView
@@ -95,7 +98,6 @@
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:gravity="center" />
-
                 </androidx.cardview.widget.CardView>
 
                 <!-- Location Label -->
@@ -107,14 +109,14 @@
                     android:textColor="#FFFFFF"
                     android:textSize="12sp"
                     android:textStyle="bold"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="60dp"
+                    android:layout_marginTop="6dp"
                     android:shadowColor="#000000"
                     android:shadowDx="1"
                     android:shadowDy="1"
                     android:shadowRadius="2" />
 
-            </FrameLayout>
+            </LinearLayout>
+
 
         </FrameLayout>
 

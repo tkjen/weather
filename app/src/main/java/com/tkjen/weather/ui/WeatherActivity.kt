@@ -52,11 +52,15 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
             val currentTemp = response.current.temp_c
             val location = response.location.name
             val content = response.current.condition.text
+            val forecastdayText = response.forecast?.forecastday?.firstOrNull()?.day?.condition?.text
             binding.tvLocation.text = "$location"
+            binding.locationName.text = "$location"
             binding.tvTemperatureValue.text = "$currentTemp\u00B0"
-            binding.tvWeather.text = "$content"
+            binding.tvWeather.text = "$forecastdayText"
             binding.locationTemperature.text = " $currentTemp"
 
+
+            binding.tvCondition.text
             // Forecast
             val todayAstro = response.forecast?.forecastday?.firstOrNull()?.astro
             val sunrise = todayAstro?.sunrise ?: "--:--"

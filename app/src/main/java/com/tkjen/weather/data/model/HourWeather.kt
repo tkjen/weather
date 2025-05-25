@@ -7,4 +7,5 @@ data class HourWeather(
     val precip_mm: Double,
     val dewpoint_c: Double,
     val dewpoint_f: Double,
+
 )

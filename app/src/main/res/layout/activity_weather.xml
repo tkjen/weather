@@ -236,14 +236,15 @@
                         <!-- Map Lines/Borders -->
 
                         <!-- Location Marker -->
-                        <FrameLayout
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center">
+                            android:layout_gravity="center"
+                            android:orientation="vertical"
+                            android:gravity="center_horizontal">
 
                             <!-- Temperature Circle -->
                             <androidx.cardview.widget.CardView
-                                android:id="@+id/cv_location_temperature"
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
                                 app:cardCornerRadius="22dp"
@@ -260,15 +261,6 @@
                                     android:textSize="18sp"
                                     android:textStyle="bold"
                                     android:gravity="center" />
-
-                                <ImageView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:alpha="0.3"
-                                    android:scaleType="centerCrop"
-                                    android:src="@drawable/map_boundaries"
-                                    app:tint="#8B4513" />
-
                             </androidx.cardview.widget.CardView>
 
                             <!-- Location Label -->
@@ -280,14 +272,13 @@
                                 android:textColor="#FFFFFF"
                                 android:textSize="12sp"
                                 android:textStyle="bold"
-                                android:layout_gravity="center"
-                                android:layout_marginTop="60dp"
+                                android:layout_marginTop="6dp"
                                 android:shadowColor="#000000"
                                 android:shadowDx="1"
                                 android:shadowDy="1"
                                 android:shadowRadius="2" />
 
-                        </FrameLayout>
+                        </LinearLayout>
 
                     </FrameLayout>
 
