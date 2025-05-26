@@ -186,6 +186,11 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
         binding.seemore.setOnClickListener{
             openMapWithCurrentLocation()
         }
+        binding.icMenuToolbar.setOnClickListener{
+            val intent = Intent(this, WeatherListActivity::class.java)
+            startActivity(intent)
+
+        }
 
     }
 

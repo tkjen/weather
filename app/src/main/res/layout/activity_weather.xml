@@ -105,6 +105,7 @@
         app:layout_constraintTop_toBottomOf="@id/line0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/toolbarWeather"
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
@@ -353,6 +354,7 @@
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
+
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
@@ -911,53 +913,64 @@
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarWeather"
+        android:layout_width="0dp"
+    android:layout_height="50dp"
+    app:title="@null"
+    android:background="@drawable/toolbar_custom"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:elevation="4dp"
+    >
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        app:title="@null"
-        android:background="@drawable/toolbar_custom"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        >
+        android:layout_height="match_parent"
+        android:paddingStart="8dp"
+    android:paddingEnd="8dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <!-- Left Icon -->
+    <ImageButton
+        android:id="@+id/ic_map_toolbar"
+    android:layout_width="38dp"
+    android:layout_height="38dp"
+    android:layout_alignParentStart="true"
+    android:layout_centerVertical="true"
+    android:src="@drawable/ic_map"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:padding="8dp"
+    android:scaleType="fitCenter"
+    android:contentDescription="Map" />
 
-            <!-- Left Icon -->
-            <ImageView
-                android:id="@+id/ic_map"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_map"
-                android:padding="16dp" />
+    <ImageButton
+        android:id="@+id/location_toolbar"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_location"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+    android:scaleType="fitCenter"
+    android:contentDescription="Current Location" />
 
-            <!-- Centered Title -->
-            <ImageView
-                android:id="@+id/location_toolbar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_location"
+    <!-- Right Icon -->
+    <ImageButton
+        android:id="@+id/ic_menu_toolbar"
+    android:layout_width="38dp"
+    android:layout_height="38dp"
+    android:layout_alignParentEnd="true"
+    android:layout_centerVertical="true"
+    android:src="@drawable/ic_menu"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:padding="8dp"
+    android:scaleType="fitCenter"
+    android:contentDescription="Menu" />
 
-                android:textStyle="bold" />
-
-            <!-- Right Icon -->
-            <ImageView
-                android:id="@+id/ic_menu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_menu"
-                android:padding="16dp" />
-
-        </RelativeLayout>
+</RelativeLayout>
 
     </androidx.appcompat.widget.Toolbar>
 
