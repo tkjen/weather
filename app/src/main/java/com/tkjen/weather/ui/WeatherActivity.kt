@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -126,41 +127,41 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
             }
         }
 
-        lifecycleScope.launch {
-            val isRain =binding.tvWeather.text.contains("Rain", ignoreCase = true)
-            val isThunder = binding.tvWeather.text.contains("Thunder", ignoreCase = true) || binding.tvWeather.text.contains("Storm", ignoreCase = true)
-
-            when {
-                isRain && isThunder -> {
-                    binding.rainAnimation.visibility = View.VISIBLE
-                    binding.rainAnimation.playAnimation()
-
-                    binding.thunderAnimation.visibility = View.VISIBLE
-                    binding.thunderAnimation.playAnimation()
-                }
-                isThunder -> {
-                    binding.rainAnimation.visibility = View.GONE
-                    binding.rainAnimation.cancelAnimation()
-
-                    binding.thunderAnimation.visibility = View.VISIBLE
-                    binding.thunderAnimation.playAnimation()
-                }
-                isRain -> {
-                    binding.rainAnimation.visibility = View.VISIBLE
-                    binding.rainAnimation.playAnimation()
-
-                    binding.thunderAnimation.visibility = View.GONE
-                    binding.thunderAnimation.cancelAnimation()
-                }
-                else -> {
-                    binding.rainAnimation.visibility = View.GONE
-                    binding.rainAnimation.cancelAnimation()
-
-                    binding.thunderAnimation.visibility = View.GONE
-                    binding.thunderAnimation.cancelAnimation()
-                }
-            }
-        }
+//        lifecycleScope.launch {
+//            val isRain =binding.tvWeather.text.contains("Rain", ignoreCase = true)
+//            val isThunder = binding.tvWeather.text.contains("Thunder", ignoreCase = true) || binding.tvWeather.text.contains("Storm", ignoreCase = true)
+//
+//            when {
+//                isRain && isThunder -> {
+//                    binding.rainAnimation.visibility = View.VISIBLE
+//                    binding.rainAnimation.playAnimation()
+//
+//                    binding.thunderAnimation.visibility = View.VISIBLE
+//                    binding.thunderAnimation.playAnimation()
+//                }
+//                isThunder -> {
+//                    binding.rainAnimation.visibility = View.GONE
+//                    binding.rainAnimation.cancelAnimation()
+//
+//                    binding.thunderAnimation.visibility = View.VISIBLE
+//                    binding.thunderAnimation.playAnimation()
+//                }
+//                isRain -> {
+//                    binding.rainAnimation.visibility = View.VISIBLE
+//                    binding.rainAnimation.playAnimation()
+//
+//                    binding.thunderAnimation.visibility = View.GONE
+//                    binding.thunderAnimation.cancelAnimation()
+//                }
+//                else -> {
+//                    binding.rainAnimation.visibility = View.GONE
+//                    binding.rainAnimation.cancelAnimation()
+//
+//                    binding.thunderAnimation.visibility = View.GONE
+//                    binding.thunderAnimation.cancelAnimation()
+//                }
+//            }
+//        }
 
 
       //  viewModel.loadWeather("Ho Chi Minh") // Thay thế bằng vị trí mặc định nếu không có quyền
@@ -186,8 +187,9 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
             openMapWithCurrentLocation()
         }
 
-
     }
+
+
 
     @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {

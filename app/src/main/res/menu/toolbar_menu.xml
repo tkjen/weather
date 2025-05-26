@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/map"
+        android:icon="@drawable/ic_map"
+        android:title="Map"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/location"
+        android:title="Location"
+        android:icon="@drawable/ic_location"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_add_city"
+        android:title="Add City"
+        android:icon="@drawable/ic_menu"
+        app:showAsAction="ifRoom" />
+</menu>
