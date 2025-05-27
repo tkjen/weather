@@ -103,11 +103,11 @@
 
             <!-- Location name -->
             <TextView
-                android:id="@+id/tv_location_name"
+                android:id="@+id/tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Seongnam-si"
+                android:text="9:11 PM"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 android:alpha="0.9" />

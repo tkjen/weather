@@ -186,11 +186,7 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
         binding.seemore.setOnClickListener{
             openMapWithCurrentLocation()
         }
-        binding.icMenuToolbar.setOnClickListener{
-            val intent = Intent(this, WeatherListActivity::class.java)
-            startActivity(intent)
 
-        }
 
     }
 
@@ -222,6 +218,7 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
                     val gmmIntentUri = Uri.parse("geo:$latitude,$longitude?q=$latitude,$longitude(My Location)")
                     val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                     mapIntent.setPackage("com.google.android.apps.maps")
+
                     if (mapIntent.resolveActivity(packageManager) != null) {
                         startActivity(mapIntent)
                     } else {
@@ -309,6 +306,16 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
                     Log.d("WeatherActivity", "Fetched location: $latLon")
                     // Gọi ViewModel để tải thời tiết với vị trí này
                     // viewModel.getCurrentWeather(latLon)
+                    binding.icMenuToolbar.setOnClickListener{
+                        val location = LatLng(location.latitude, location.longitude)
+                        val intent = Intent(this, WeatherListActivity::class.java).apply {
+                            putExtra("lat", location.latitude)
+                            putExtra("lon", location.longitude)
+                        }
+                        startActivity(intent)
+
+
+                    }
                     viewModel.loadWeather(latLon)
                     Toast.makeText(this, "Location: $latLon", Toast.LENGTH_SHORT).show() // Ví dụ hiển thị
                 } else {
