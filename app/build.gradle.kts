@@ -140,4 +140,9 @@ dependencies {
     implementation("com.google.maps.android:android-maps-utils:3.10.0")
 //
     implementation ("com.airbnb.android:lottie:6.4.0")
+
+    //Room
+    implementation("androidx.room:room-runtime:$room_version")
+    ksp("androidx.room:room-compiler:$room_version") // CHỈ DÙNG KSP
+    implementation("androidx.room:room-ktx:$room_version")
 }

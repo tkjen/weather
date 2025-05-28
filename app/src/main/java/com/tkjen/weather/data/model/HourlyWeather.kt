@@ -1,4 +1,4 @@
-package com.tkjen.weather.data.local
+package com.tkjen.weather.data.model
 
 data class HourlyWeather(
     val hour: String,

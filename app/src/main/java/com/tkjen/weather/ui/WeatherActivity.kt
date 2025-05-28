@@ -9,15 +9,13 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import android.view.Menu
-import android.view.View
+
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -26,7 +24,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.tkjen.weather.BuildConfig
 import com.tkjen.weather.R
 import com.tkjen.weather.data.model.HourWeather
 import com.tkjen.weather.data.model.WeatherResponse
@@ -34,13 +31,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 import com.tkjen.weather.databinding.ActivityWeatherBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 
-import com.google.android.gms.maps.model.MapStyleOptions
 
 @AndroidEntryPoint
 class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReadyCallback {
@@ -101,6 +96,13 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
                 ?: run {
                     binding.recyclerDailyForecast.adapter = ForecastAdapter(dailyList)
                 }
+        }
+
+        // Observer cho thông báo lỗi
+        viewModel.errorMessage.observe(this) { message ->
+            if (message != null && message.isNotEmpty()) {
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+            }
         }
     }
 

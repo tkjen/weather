@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.tkjen.weather.data.local.DayForecast // Hoặc DayForecastUi nếu bạn dùng
+import com.tkjen.weather.data.model.DayForecast // Hoặc DayForecastUi nếu bạn dùng
 import com.tkjen.weather.databinding.ItemDayForecastBinding
 
 class ForecastAdapter(

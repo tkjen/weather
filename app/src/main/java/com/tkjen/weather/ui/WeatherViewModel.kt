@@ -6,9 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tkjen.weather.R
-import com.tkjen.weather.data.api.WeatherRepository
-import com.tkjen.weather.data.local.DayForecast
-import com.tkjen.weather.data.local.HourlyWeather
+import com.tkjen.weather.data.repository.WeatherRepository
+import com.tkjen.weather.data.model.DayForecast
+import com.tkjen.weather.data.model.HourlyWeather
 import com.tkjen.weather.data.model.HourWeather
 import com.tkjen.weather.data.model.WeatherResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,72 +32,75 @@ class WeatherViewModel @Inject constructor(
     private val _dailyForecast = MutableLiveData<List<DayForecast>>()
     val dailyForecast: LiveData<List<DayForecast>> = _dailyForecast
 
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> = _errorMessage
+
     fun loadWeather(location: String) {
         viewModelScope.launch {
-            try {
-                val result = repository.getForecastWeather(location,10)
-                _weather.postValue(result)
-
-                // Xử lý HourlyWeather
-                val hours: List<HourWeather> = result.forecast
-                    ?.forecastday
-                    ?.firstOrNull()
-                    ?.hour
-                    ?: emptyList()
+            when (val result = repository.getWeatherData(location)) {
+                is WeatherRepository.Result.Success -> {
+                    val weatherResponse = result.data
+                    _weather.postValue(weatherResponse)
+                    _errorMessage.postValue(null)
 
 
+                    val hours: List<HourWeather> = weatherResponse.forecast
+                        ?.forecastday
+                        ?.firstOrNull()
+                        ?.hour
+                        ?: emptyList()
 
-                val hourly = hours.map { hour ->
-                    val formattedHour = hour.time.takeLast(5)
-                    val temp = "${hour.temp_c.toInt()}°"
-                    val iconUrl = "https:${hour.condition.icon}"
-                    HourlyWeather(
-                        hour = formattedHour,
-                        temperature = temp,
-                        weatherIconUrl = iconUrl
-                    )
-                }
-                _hourlyList.postValue(hourly)
-
-                // Xử lý DayForecast
-                val currentTemp = result.current.temp_c.toInt()
-
-                val daily = result.forecast
-                    ?.forecastday
-                    ?.map { forecastDay ->
-
-                        val dayName = if (forecastDay == result.forecast.forecastday.first()) {
-                            "Today"
-                        } else {
-                            val sdfInput = java.text.SimpleDateFormat(
-                                "yyyy-MM-dd",
-                                java.util.Locale.getDefault()
-                            )
-                            val sdfOutput = java.text.SimpleDateFormat("EEE", java.util.Locale.getDefault())
-                            val date = sdfInput.parse(forecastDay.date)
-                            sdfOutput.format(date ?: java.util.Date())
-                        }
-
-                        val iconResId = mapIconToRes(forecastDay.day.condition.icon)
-
-                        DayForecast(
-                            dayName = dayName,
-                            iconResId = iconResId,
-                            percentage = forecastDay.day.daily_chance_of_rain ?: 0,
-                            lowTemp = forecastDay.day.mintemp_c?.toInt() ?: 0,
-                            highTemp = forecastDay.day.maxtemp_c?.toInt() ?: 0,
-                            currentTemp = if (dayName == "Today") currentTemp else (forecastDay.day.avgtemp_c?.toInt() ?: 0)
+                    val hourly = hours.map { hour ->
+                        val formattedHour = hour.time.takeLast(5)
+                        val temp = "${hour.temp_c.toInt()}°"
+                        val iconUrl = "https:${hour.condition.icon}"
+                        HourlyWeather(
+                            hour = formattedHour,
+                            temperature = temp,
+                            weatherIconUrl = iconUrl
                         )
+                    }
+                    _hourlyList.postValue(hourly)
 
-                    } ?: emptyList()
-                _dailyForecast.postValue(daily)
+                    val currentTemp = weatherResponse.current.temp_c.toInt()
 
+                    val daily = weatherResponse.forecast
+                        ?.forecastday
+                        ?.map { forecastDay ->
+                            val dayName = if (forecastDay == weatherResponse.forecast.forecastday.first()) {
+                                "Today"
+                            } else {
+                                val sdfInput = java.text.SimpleDateFormat(
+                                    "yyyy-MM-dd",
+                                    java.util.Locale.getDefault()
+                                )
+                                val sdfOutput = java.text.SimpleDateFormat("EEE", java.util.Locale.getDefault())
+                                val date = sdfInput.parse(forecastDay.date)
+                                sdfOutput.format(date ?: java.util.Date())
+                            }
 
-            } catch (e: Exception) {
-                e.printStackTrace()
+                            val iconResId = mapIconToRes(forecastDay.day.condition.icon)
+
+                            DayForecast(
+                                dayName = dayName,
+                                iconResId = iconResId,
+                                percentage = forecastDay.day.daily_chance_of_rain ?: 0,
+                                lowTemp = forecastDay.day.mintemp_c?.toInt() ?: 0,
+                                highTemp = forecastDay.day.maxtemp_c?.toInt() ?: 0,
+                                currentTemp = if (dayName == "Today") currentTemp else (forecastDay.day.avgtemp_c?.toInt() ?: 0)
+                            )
+                        } ?: emptyList()
+                    _dailyForecast.postValue(daily)
+
+                }
+                is WeatherRepository.Result.Error -> {
+                    Log.e("WeatherViewModel", "Error loading weather: ${result.message}")
+                    _errorMessage.postValue(result.message)
+                }
             }
         }
     }
+
     private fun mapIconToRes(iconUrl: String): Int {
         val iconCode = iconUrl.substringAfterLast("/").substringBefore(".")
         Log.d("IconMapper", "iconCode: $iconCode")
@@ -137,18 +140,14 @@ class WeatherViewModel @Inject constructor(
             val sunsetTime = formatter.parse(sunset)
 
             val durationMillis = sunsetTime.time - sunriseTime.time
-            val hours = TimeUnit.MILLISECONDS.toHours(durationMillis)
+            val hours = TimeUnit.MILLISECONDS.toHours(durationMillis) % 24
             val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis) % 60
 
             String.format("%02d:%02d", hours, minutes)
         } catch (e: Exception) {
+            Log.e("WeatherViewModel", "Error calculating day duration", e)
             "--:--"
         }
     }
-
-
-
-
-
 }
 

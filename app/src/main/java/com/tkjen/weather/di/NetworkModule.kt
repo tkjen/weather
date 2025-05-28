@@ -2,7 +2,7 @@ package com.tkjen.weather.di
 
 import com.tkjen.weather.BuildConfig
 
-import com.tkjen.weather.data.api.WeatherApi
+import com.tkjen.weather.data.api.WeatherApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,8 +27,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideWeatherApi(retrofit: Retrofit): WeatherApi =
-        retrofit.create(WeatherApi::class.java)
+    fun provideWeatherApi(retrofit: Retrofit): WeatherApiService =
+        retrofit.create(WeatherApiService::class.java)
 
     @Provides
     @Singleton

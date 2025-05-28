@@ -4,7 +4,7 @@ import com.tkjen.weather.data.model.WeatherResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface WeatherApi {
+interface WeatherApiService {
     @GET("current.json")
     suspend fun getCurrentWeather(
         @Query("key") apiKey: String,
