@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="#4D2C2C2E" /> <!-- Màu nền tối mờ. #2C2C2E là màu gốc, 4D là ~30% alpha -->
-    <corners android:radius="20dp" /> <!-- Điều chỉnh độ bo tròn ở đây -->
+    <solid android:color="#802D2D2D" /> <!-- Màu nền rất trong suốt -->
+    <corners android:radius="20dp" />
 </shape>

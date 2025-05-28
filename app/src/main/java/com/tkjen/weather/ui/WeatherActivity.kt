@@ -28,12 +28,20 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tkjen.weather.BuildConfig
 import com.tkjen.weather.R
+import com.tkjen.weather.data.model.HourWeather
+import com.tkjen.weather.data.model.WeatherResponse
 import java.text.SimpleDateFormat
 import java.util.*
 import com.tkjen.weather.databinding.ActivityWeatherBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+
+import com.google.android.gms.maps.model.MapStyleOptions
+
 @AndroidEntryPoint
 class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReadyCallback {
 
@@ -44,153 +52,152 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
     private lateinit var mapView: MapView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupUI()
+        checkAndRequestLocationPermissions()
+        setupObservers()
+        setupMapView(savedInstanceState)
+    }
+
+    private fun setupUI() {
         enableEdgeToEdge()
         binding = ActivityWeatherBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        checkAndRequestLocationPermissions()
+        
+        // Thiết lập RecyclerView
+        setupRecyclerViews()
+    }
 
+    private fun setupRecyclerViews() {
+        // Thiết lập RecyclerView cho thời tiết theo giờ
+        binding.recyclerHourly.apply {
+            layoutManager = LinearLayoutManager(this@WeatherActivity, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+        }
+
+        // Thiết lập RecyclerView cho dự báo theo ngày
+        binding.recyclerDailyForecast.apply {
+            layoutManager = LinearLayoutManager(this@WeatherActivity)
+            setHasFixedSize(true)
+        }
+    }
+
+    private fun setupObservers() {
+        // Observer cho dữ liệu thời tiết
         viewModel.weather.observe(this) { response ->
-            val currentTemp = response.current.temp_c
-            val location = response.location.name
-            val content = response.current.condition.text
-            val forecastdayText = response.forecast?.forecastday?.firstOrNull()?.day?.condition?.text
-            binding.tvLocation.text = "$location"
-            binding.locationName.text = "$location"
-            binding.tvTemperatureValue.text = "$currentTemp\u00B0"
-            binding.tvWeather.text = "$content"
-            binding.locationTemperature.text = " $currentTemp"
+            updateWeatherUI(response)
+        }
 
+        // Observer cho danh sách thời tiết theo giờ
+        viewModel.hourlyList.observe(this) { hourlyList ->
+            (binding.recyclerHourly.adapter as? HourlyWeatherAdapter)?.updateData(hourlyList)
+                ?: run {
+                    binding.recyclerHourly.adapter = HourlyWeatherAdapter(hourlyList)
+                }
+        }
 
+        // Observer cho dự báo theo ngày
+        viewModel.dailyForecast.observe(this) { dailyList ->
+            (binding.recyclerDailyForecast.adapter as? ForecastAdapter)?.updateData(dailyList)
+                ?: run {
+                    binding.recyclerDailyForecast.adapter = ForecastAdapter(dailyList)
+                }
+        }
+    }
 
-            // Forecast
-            val todayAstro = response.forecast?.forecastday?.firstOrNull()?.astro
-            val sunrise = todayAstro?.sunrise ?: "--:--"
-            val sunset = todayAstro?.sunset ?: "--:--"
+    private fun updateWeatherUI(response: WeatherResponse) {
+        binding.apply {
+            tvLocation.text = response.location.name
+            locationName.text = response.location.name
+            tvTemperatureValue.text = "${response.current.temp_c}°"
+            tvWeather.text = response.current.condition.text
+            locationTemperature.text = " ${response.current.temp_c}"
+        }
 
-            val hours = response.forecast?.forecastday?.firstOrNull()?.hour ?: emptyList()
+        updateDetailedWeatherInfo(response)
+        updateForecastInfo(response)
+    }
 
-            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-            val currentEpochMillis = System.currentTimeMillis()
-
-            val currentHourData = hours.minByOrNull { hourItem ->
-                val date = sdf.parse(hourItem.time)
-                val epochMillis = date?.time ?: 0L
-                kotlin.math.abs(epochMillis - currentEpochMillis)
-            }
+    private fun updateDetailedWeatherInfo(response: WeatherResponse) {
+        binding.apply {
+            val currentHourData = getCurrentHourData(response)
             currentHourData?.let {
-                val dewPointC = it.dewpoint_c
-                val dewPointF = it.dewpoint_f
-                Log.d("Weather", "Current dew point:: $dewPointC °C / $dewPointF °F lúc ${it.time}")
-                binding.contenthumidity.text = "Current dew point: $dewPointC °C "
+                contenthumidity.text = "Current dew point: ${it.dewpoint_c} °C"
             }
-
-
 
             val uv = response.current.uv
-            val fealsLike = response.current.feelslike_c
-            // tong luong mua trong ngay
-            val rainfall = response.forecast?.forecastday?.firstOrNull()?.day?.totalprecip_mm ?: 0.0
-
-            val currentPrecip = response.current.precip_mm
-            val forecastPrecip = response.forecast?.forecastday?.get(0)?.day?.totalprecip_mm
-
-            binding.currentRainfall.text = "$currentPrecip mm"
-            binding.expectedRainfall.text = "$forecastPrecip mm expected in next 24h."
-            val windSpeed = response.current.wind_kph
-            val windDegree = response.current.wind_degree.toFloat()
-            val humidity = response.current.humidity
-
-            val uiLevel = viewModel.getUIlevel(uv)
-
             val progressPercent = ((uv / 11f) * 100).toInt().coerceIn(0, 100)
-            binding.sunsetTime.text = "$sunset"
-            Log.d("WeatherActivity", "Sunrise: $sunrise, Sunset: $sunset")
-            binding.uvProgress.progress = progressPercent
-            binding.uvLevel.text = uiLevel
-            binding.humidityValue.text = "$humidity%"
+            uvProgress.progress = progressPercent
+            uvLevel.text = viewModel.getUIlevel(uv)
+            uvValue.text = "$uv"
 
-          //  binding.currentRainfall.text = "$rainfall mm"
-            binding.windSpeed.text = windSpeed.toString()
+            windSpeed.text = response.current.wind_kph.toString()
+            windDirectionArrow.rotation = (response.current.wind_degree + 180).toFloat() % 360
 
-            binding.windDirectionArrow.rotation = (windDegree + 180) % 360
-            binding.feelsLike.text = "$fealsLike\u00B0"
-            binding.uvValue.text = "$uv"
-            binding.sunriseTime.text = "$sunrise"
-            binding.contentfeelsLike.text = "$content - Feels like $fealsLike\u00B0"
+            humidityValue.text = "${response.current.humidity}%"
+            feelsLike.text = "${response.current.feelslike_c}°"
+            contentfeelsLike.text = "${response.current.condition.text} - Feels like ${response.current.feelslike_c}°"
+        }
+    }
 
-            val todayForecast = response.forecast?.forecastday?.firstOrNull()
-            todayForecast?.let {
-                val highTemp = it.day.maxtemp_c
-                val lowTemp = it.day.mintemp_c
-                binding.tvHighLowTemp.text = "H:${highTemp.toInt()}° L:${lowTemp.toInt()}°"
-
+    private fun updateForecastInfo(response: WeatherResponse) {
+        val todayForecast = response.forecast?.forecastday?.firstOrNull()
+        todayForecast?.let {
+            binding.apply {
+                tvHighLowTemp.text = "H:${it.day.maxtemp_c.toInt()}° L:${it.day.mintemp_c.toInt()}°"
+                
+                sunsetTime.text = it.astro.sunset
+                sunriseTime.text = it.astro.sunrise
+                
+                currentRainfall.text = "${response.current.precip_mm} mm"
+                expectedRainfall.text = "${it.day.totalprecip_mm} mm expected in next 24h."
             }
         }
+    }
 
-//        lifecycleScope.launch {
-//            val isRain =binding.tvWeather.text.contains("Rain", ignoreCase = true)
-//            val isThunder = binding.tvWeather.text.contains("Thunder", ignoreCase = true) || binding.tvWeather.text.contains("Storm", ignoreCase = true)
-//
-//            when {
-//                isRain && isThunder -> {
-//                    binding.rainAnimation.visibility = View.VISIBLE
-//                    binding.rainAnimation.playAnimation()
-//
-//                    binding.thunderAnimation.visibility = View.VISIBLE
-//                    binding.thunderAnimation.playAnimation()
-//                }
-//                isThunder -> {
-//                    binding.rainAnimation.visibility = View.GONE
-//                    binding.rainAnimation.cancelAnimation()
-//
-//                    binding.thunderAnimation.visibility = View.VISIBLE
-//                    binding.thunderAnimation.playAnimation()
-//                }
-//                isRain -> {
-//                    binding.rainAnimation.visibility = View.VISIBLE
-//                    binding.rainAnimation.playAnimation()
-//
-//                    binding.thunderAnimation.visibility = View.GONE
-//                    binding.thunderAnimation.cancelAnimation()
-//                }
-//                else -> {
-//                    binding.rainAnimation.visibility = View.GONE
-//                    binding.rainAnimation.cancelAnimation()
-//
-//                    binding.thunderAnimation.visibility = View.GONE
-//                    binding.thunderAnimation.cancelAnimation()
-//                }
-//            }
-//        }
+    private fun getCurrentHourData(response: WeatherResponse): HourWeather? {
+        val hours = response.forecast?.forecastday?.firstOrNull()?.hour ?: return null
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+        val currentEpochMillis = System.currentTimeMillis()
 
-
-      //  viewModel.loadWeather("Ho Chi Minh") // Thay thế bằng vị trí mặc định nếu không có quyền
-        Log.d("API_KEY", "WEATHER_API_KEY=${BuildConfig.WEATHER_API_KEY}")
-
-
-        viewModel.hourlyList.observe(this) { list ->
-            val adapterHourlyList = HourlyWeatherAdapter(list)
-            binding.recyclerHourly.adapter = adapterHourlyList
+        return hours.minByOrNull { hourItem ->
+            val date = sdf.parse(hourItem.time)
+            val epochMillis = date?.time ?: 0L
+            kotlin.math.abs(epochMillis - currentEpochMillis)
         }
-        viewModel.dailyForecast.observe(this){ list ->
-            val adapterDailyForeCast = ForecastAdapter(list)
-            binding.recyclerDailyForecast.adapter = adapterDailyForeCast
+    }
 
-        }
+    private fun setupMapView(savedInstanceState: Bundle?) {
         mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
-        binding.mapView.setOnClickListener {
-            openMapWithCurrentLocation()
-        }
-        binding.seemore.setOnClickListener{
-            openMapWithCurrentLocation()
-        }
+        
+        // Thêm click listeners
+        binding.mapView.setOnClickListener { openMapWithCurrentLocation() }
+        binding.seemore.setOnClickListener { openMapWithCurrentLocation() }
+        
+        // Thêm lifecycle callbacks cho MapView
+        lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onStart(owner: LifecycleOwner) {
+                mapView.onStart()
+            }
 
+            override fun onResume(owner: LifecycleOwner) {
+                mapView.onResume()
+            }
 
+            override fun onPause(owner: LifecycleOwner) {
+                mapView.onPause()
+            }
+
+            override fun onStop(owner: LifecycleOwner) {
+                mapView.onStop()
+            }
+
+            override fun onDestroy(owner: LifecycleOwner) {
+                mapView.onDestroy()
+            }
+        })
     }
-
-
 
     @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
@@ -198,9 +205,40 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
             if (location != null) {
                 val currentLatLng = LatLng(location.latitude, location.longitude)
                 googleMap.apply {
-                    uiSettings.isZoomControlsEnabled = true
-                    addMarker(MarkerOptions().position(currentLatLng).title("Your Location"))
-                    moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 14f))
+                    // Cấu hình map
+                    uiSettings.apply {
+                        isZoomControlsEnabled = true
+                        isZoomGesturesEnabled = true
+                        isScrollGesturesEnabled = true
+                        isRotateGesturesEnabled = true
+                        isTiltGesturesEnabled = true
+                        isCompassEnabled = true
+                        isMyLocationButtonEnabled = true
+                        isMapToolbarEnabled = true
+                    }
+                    
+                    // Thêm marker với animation
+                    addMarker(
+                        MarkerOptions()
+                            .position(currentLatLng)
+                            .title("Your Location")
+                            .snippet("Current temperature: ${binding.locationTemperature.text}")
+                    )?.showInfoWindow()
+
+                    // Di chuyển camera với animation
+                    animateCamera(
+                        CameraUpdateFactory.newLatLngZoom(currentLatLng, 14f),
+                        1000,
+                        null
+                    )
+
+                    // Thêm style cho map
+                    // setMapStyle(
+                    //     MapStyleOptions.loadRawResourceStyle(
+                    //         this@WeatherActivity,
+                    //         R.raw.map_style
+                    //     )
+                    // )
                 }
             } else {
                 Toast.makeText(this, "Không thể lấy vị trí", Toast.LENGTH_SHORT).show()
@@ -250,15 +288,12 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
                 else -> {
                     Log.d("WeatherActivity", "Location permission denied")
                     showPermissionDeniedDialog()
-                    // Cân nhắc: Tải dữ liệu mặc định nếu người dùng từ chối hoàn toàn
-                    // viewModel.getCurrentWeather("Hanoi")
                 }
             }
         }
 
     private fun checkAndRequestLocationPermissions() {
         when {
-            // Kiểm tra xem quyền đã được cấp chưa
             ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -266,17 +301,14 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
                 this,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED -> {
-                // Quyền đã được cấp
                 Log.d("WeatherActivity", "Location permission already granted")
                 fetchLastLocationAndLoadWeather()
             }
-            // Kiểm tra xem có nên hiển thị giải thích cho người dùng không
             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) ||
                     shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) -> {
                 Log.d("WeatherActivity", "Showing permission rationale")
                 showPermissionRationaleDialog()
             }
-            // Yêu cầu quyền
             else -> {
                 Log.d("WeatherActivity", "Requesting location permission")
                 requestLocationPermissionLauncher.launch(
@@ -288,14 +320,12 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
             }
         }
     }
-    @SuppressLint("MissingPermission") // Đã kiểm tra quyền ở checkAndRequestLocationPermissions
+    @SuppressLint("MissingPermission")
     private fun fetchLastLocationAndLoadWeather() {
-        // Kiểm tra lại quyền một lần nữa để đảm bảo (dù không bắt buộc nếu logic trên đúng)
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.w("WeatherActivity", "Attempted to fetch location without permission (should not happen).")
-            // Có thể yêu cầu lại quyền hoặc xử lý lỗi
-            checkAndRequestLocationPermissions() // Yêu cầu lại
+            checkAndRequestLocationPermissions()
             return
         }
 
@@ -304,8 +334,6 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
                 if (location != null) {
                     val latLon = "${location.latitude} , ${location.longitude}"
                     Log.d("WeatherActivity", "Fetched location: $latLon")
-                    // Gọi ViewModel để tải thời tiết với vị trí này
-                    // viewModel.getCurrentWeather(latLon)
                     binding.icMenuToolbar.setOnClickListener{
                         val location = LatLng(location.latitude, location.longitude)
                         val intent = Intent(this, WeatherListActivity::class.java).apply {
@@ -313,24 +341,18 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
                             putExtra("lon", location.longitude)
                         }
                         startActivity(intent)
-
-
                     }
                     viewModel.loadWeather(latLon)
-                    Toast.makeText(this, "Location: $latLon", Toast.LENGTH_SHORT).show() // Ví dụ hiển thị
+                    Toast.makeText(this, "Location: $latLon", Toast.LENGTH_SHORT).show()
                 } else {
                     Log.w("WeatherActivity", "Last location is null.")
                     Toast.makeText(this, "Could not retrieve current location.", Toast.LENGTH_LONG).show()
-                    // Cân nhắc: Tải dữ liệu mặc định
-                    // viewModel.getCurrentWeather("Hanoi")
                     viewModel.loadWeather("Ho Chi Minh")
                 }
             }
             .addOnFailureListener { e ->
                 Log.e("WeatherActivity", "Failed to get location", e)
                 Toast.makeText(this, "Failed to get location.", Toast.LENGTH_LONG).show()
-                // Cân nhắc: Tải dữ liệu mặc định
-                // viewModel.getCurrentWeather("Hanoi")
             }
     }
 
@@ -348,8 +370,6 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
             }
             .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
-                // Người dùng hủy dialog giải thích, có thể tải dữ liệu mặc định
-                // viewModel.getCurrentWeather("Hanoi")
                 Toast.makeText(this, "Permission rationale cancelled.", Toast.LENGTH_SHORT).show()
             }
             .show()
@@ -360,7 +380,6 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
             .setTitle("Location Permission Denied")
             .setMessage("Location permission was denied. To use this feature, please enable it in the app settings or allow location access to see local weather.")
             .setPositiveButton("Go to Settings") { _, _ ->
-                // Mở cài đặt của ứng dụng
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                 val uri = Uri.fromParts("package", packageName, null)
                 intent.data = uri
@@ -368,8 +387,6 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
             }
             .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
-                // Người dùng hủy dialog từ chối, có thể tải dữ liệu mặc định
-                // viewModel.getCurrentWeather("Hanoi")
                 Toast.makeText(this, "Permission denied dialog cancelled.", Toast.LENGTH_SHORT).show()
             }
             .show()

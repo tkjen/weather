@@ -53,19 +53,17 @@
             android:src="@drawable/ic_search"
             android:alpha="0.7" />
 
-        <EditText
+        <TextView
             android:id="@+id/edt_search"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@null"
-            android:hint="Search for a city or airport"
-            android:inputType="text"
-            android:maxLines="1"
-            android:textColor="@color/white"
-            android:textColorHint="#80FFFFFF"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:text="Search for a city or airport"
+            android:textColor="@color/grey_text"
             android:textSize="16sp"
-            android:visibility="visible" />
+            />
 
     </LinearLayout>
 

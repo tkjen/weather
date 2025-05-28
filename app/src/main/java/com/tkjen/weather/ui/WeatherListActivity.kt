@@ -29,6 +29,7 @@ class WeatherListActivity:AppCompatActivity(R.layout.activity_weather_list) {
 
     private lateinit var binding: ActivityWeatherListBinding
     private val viewModel: WeatherViewModel by viewModels()
+
     @Inject
     lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -41,6 +42,7 @@ class WeatherListActivity:AppCompatActivity(R.layout.activity_weather_list) {
 
         val lat = intent.getDoubleExtra("lat", Double.NaN)
         val lon = intent.getDoubleExtra("lon", Double.NaN)
+
         if (!lat.isNaN() && !lon.isNaN()) {
             // Vị trí đã được truyền từ HomeActivity -> dùng ngay
             val latLon = "$lat,$lon"
@@ -50,6 +52,13 @@ class WeatherListActivity:AppCompatActivity(R.layout.activity_weather_list) {
             checkAndRequestLocationPermissions()
         }
         observeWeather()
+        binding.edtSearch.setOnClickListener {
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivity(intent)
+        }
+
+
+
 
 
     }

@@ -204,26 +204,21 @@
             </LinearLayout>
 
             <!-- Add some bottom padding for better scrolling experience -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
 
-                />
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="8dp"
-                app:cardBackgroundColor="#2D2D2D"
-                app:strokeColor="#4A9EFF"
+                app:cardBackgroundColor="#802D2D2D"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="#2D2D2D">
+                    android:background="#262C2C2E">
 
                     <!-- Header Section -->
                     <LinearLayout
@@ -234,11 +229,7 @@
                         android:padding="16dp"
                         android:paddingBottom="12dp">
 
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_temperature"
-                            app:tint="#8E8E93" />
+
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -269,7 +260,6 @@
                             android:layout_height="200dp"
                             android:layout_marginHorizontal="16dp"
                             android:layout_marginBottom="16dp"
-                            android:background="@drawable/temperature_map_background"
                             android:clipToOutline="true" />
 
 
@@ -281,6 +271,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:orientation="vertical"
+
                             android:gravity="center_horizontal">
 
                             <!-- Temperature Circle -->
@@ -377,13 +368,14 @@
                         android:layout_marginEnd="6dp"
                         app:cardCornerRadius="12dp"
                         app:cardElevation="0dp"
-                        app:cardBackgroundColor="#2D2D2D">
+                        app:cardBackgroundColor="#802D2D2D">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="16dp"
+                            app:cardBackgroundColor="#802D2D2D">
 
                             <!-- UV Index Header -->
                             <LinearLayout
@@ -465,13 +457,14 @@
                         android:layout_marginStart="6dp"
                         app:cardCornerRadius="12dp"
                         app:cardElevation="0dp"
-                        app:cardBackgroundColor="#2D2D2D">
+                        app:cardBackgroundColor="#262C2C2E">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="16dp"
+                            android:background="#262C2C2E">
 
                             <!-- Sunrise Header -->
                             <LinearLayout
@@ -566,13 +559,14 @@
                         android:layout_marginEnd="6dp"
                         app:cardCornerRadius="12dp"
                         app:cardElevation="0dp"
-                        app:cardBackgroundColor="#2D2D2D">
+                        app:cardBackgroundColor="#262C2C2E">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="16dp"
+                            android:background="#262C2C2E">
 
                             <!-- Wind Header -->
                             <LinearLayout
@@ -696,13 +690,14 @@
                         android:layout_marginStart="6dp"
                         app:cardCornerRadius="12dp"
                         app:cardElevation="0dp"
-                        app:cardBackgroundColor="#2D2D2D">
+                        app:cardBackgroundColor="#262C2C2E">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="16dp"
+                            android:background="#262C2C2E">
 
                             <!-- Rainfall Header -->
                             <LinearLayout
@@ -782,13 +777,14 @@
                         android:layout_marginEnd="6dp"
                         app:cardCornerRadius="12dp"
                         app:cardElevation="0dp"
-                        app:cardBackgroundColor="#2D2D2D">
+                        app:cardBackgroundColor="#262C2C2E">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="16dp"
+                            android:background="#262C2C2E">
 
                             <!-- Wind Header -->
                             <LinearLayout
@@ -847,13 +843,14 @@
                         android:layout_marginStart="6dp"
                         app:cardCornerRadius="12dp"
                         app:cardElevation="0dp"
-                        app:cardBackgroundColor="#2D2D2D">
+                        app:cardBackgroundColor="#262C2C2E">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="16dp"
+                            android:background="#262C2C2E">
 
                             <!-- Rainfall Header -->
                             <LinearLayout
@@ -918,62 +915,74 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarWeather"
         android:layout_width="0dp"
-    android:layout_height="50dp"
-    app:title="@null"
-    android:background="@drawable/toolbar_custom"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    android:elevation="4dp"
+        android:layout_height="50dp"
+        app:title="@null"
+        android:background="@drawable/toolbar_custom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="4dp"
     >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingStart="8dp"
-    android:paddingEnd="8dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp">
 
-    <!-- Left Icon -->
-    <ImageButton
-        android:id="@+id/ic_map_toolbar"
-    android:layout_width="38dp"
-    android:layout_height="38dp"
-    android:layout_alignParentStart="true"
-    android:layout_centerVertical="true"
-    android:src="@drawable/ic_map"
-    android:background="?attr/selectableItemBackgroundBorderless"
-    android:padding="8dp"
-    android:scaleType="fitCenter"
-    android:contentDescription="Map" />
+            <!-- Left Icon -->
+            <ImageButton
+                android:id="@+id/ic_map_toolbar"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Map"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_map" />
 
-    <ImageButton
-        android:id="@+id/location_toolbar"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_centerInParent="true"
-        android:src="@drawable/ic_location"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="8dp"
-    android:scaleType="fitCenter"
-    android:contentDescription="Current Location" />
+            <!-- Search/Location Input -->
+            <TextView
+                android:id="@+id/edt_search"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_centerInParent="true"
+                android:gravity="center_vertical"
+                android:text="Search for a city or airport"
+                android:textColor="@color/white"
+                android:textColorHint="#80FFFFFF"
+                android:textSize="16sp"
+                android:visibility="visible" />
 
-    <!-- Right Icon -->
-    <ImageButton
-        android:id="@+id/ic_menu_toolbar"
-    android:layout_width="38dp"
-    android:layout_height="38dp"
-    android:layout_alignParentEnd="true"
-    android:layout_centerVertical="true"
-    android:src="@drawable/ic_menu"
-    android:background="?attr/selectableItemBackgroundBorderless"
-    android:padding="8dp"
-    android:scaleType="fitCenter"
-    android:contentDescription="Menu" />
+            <ImageButton
+                android:id="@+id/location_toolbar"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_location"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:contentDescription="Current Location" />
 
-</RelativeLayout>
+            <!-- Right Icon -->
+            <ImageButton
+                android:id="@+id/ic_menu_toolbar"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Menu"
+                android:padding="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_menu" />
+
+        </RelativeLayout>
 
     </androidx.appcompat.widget.Toolbar>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

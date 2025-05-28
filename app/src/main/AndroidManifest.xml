@@ -29,7 +29,7 @@
             android:name=".ui.WeatherListActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.WeatherListActivityV2"
+            android:name=".ui.SearchActivity"
             android:exported="true" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"

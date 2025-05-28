@@ -1,4 +1,4 @@
-package com.tkjen.weather.ui
+package com.tkjen.weather.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,6 +11,11 @@ class HourlyWeatherAdapter(
     private var items: List<HourlyWeather>
 ) : RecyclerView.Adapter<HourlyWeatherAdapter.HourlyViewHolder>() {
 
+    fun updateData(newItems: List<HourlyWeather>) {
+        items = newItems
+        notifyDataSetChanged()
+    }
+
     inner class HourlyViewHolder(private val binding: ItemHourBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: HourlyWeather) {
             binding.tvHour.text = item.hour
@@ -19,7 +24,6 @@ class HourlyWeatherAdapter(
             Glide.with(binding.imgWeather.context)
                 .load(item.weatherIconUrl)
                 .into(binding.imgWeather)
-
         }
     }
 
@@ -37,10 +41,4 @@ class HourlyWeatherAdapter(
     }
 
     override fun getItemCount(): Int = items.size
-
-    fun updateData(newItems: List<HourlyWeather>) {
-        items = newItems
-        notifyDataSetChanged()
-    }
-
-}
+} 
