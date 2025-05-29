@@ -12,6 +12,7 @@ import com.tkjen.weather.data.model.DayForecast
 import com.tkjen.weather.data.model.HourlyWeather
 import com.tkjen.weather.data.model.HourWeather
 import com.tkjen.weather.data.model.WeatherResponse
+import com.tkjen.weather.utils.NetworkHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -21,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
-    private val repository: WeatherRepository
+    private val repository: WeatherRepository,
+    private val networkHelper: NetworkHelper
 ) : ViewModel() {
 
     private val _weather = MutableLiveData<WeatherResponse>()
@@ -36,6 +38,10 @@ class WeatherViewModel @Inject constructor(
     private val _errorMessage = MutableLiveData<String?>()
     val errorMessage: LiveData<String?> = _errorMessage
 
+
+    private val _isOffline = MutableLiveData<Boolean>()
+    val isOffline: LiveData<Boolean> = _isOffline
+
     fun loadWeather(location: String) {
         viewModelScope.launch {
             when (val result = repository.getWeatherData(location)) {
@@ -44,6 +50,8 @@ class WeatherViewModel @Inject constructor(
                     _weather.postValue(weatherResponse)
                     _errorMessage.postValue(null)
 
+                    // Cập nhật trạng thái mạng
+                    _isOffline.value = !networkHelper.isNetworkConnected()
 
                     val hours: List<HourWeather> = weatherResponse.forecast
                         ?.forecastday
@@ -97,11 +105,14 @@ class WeatherViewModel @Inject constructor(
                 is Result.Error -> {
                     Log.e("WeatherViewModel", "Error loading weather: ${result.message}")
                     _errorMessage.postValue(result.message)
+                    // Cập nhật trạng thái mạng
+                    _isOffline.value = !networkHelper.isNetworkConnected()
                 }
                 else -> Unit
             }
         }
     }
+
 
     private fun mapIconToRes(iconUrl: String): Int {
         val iconCode = iconUrl.substringAfterLast("/").substringBefore(".")
@@ -151,5 +162,6 @@ class WeatherViewModel @Inject constructor(
             "--:--"
         }
     }
+
 }
 

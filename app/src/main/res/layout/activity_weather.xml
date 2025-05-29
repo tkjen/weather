@@ -7,19 +7,52 @@
     android:layout_height="match_parent"
     android:background="@drawable/img"
     tools:context=".ui.WeatherActivity">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <LinearLayout
+        android:id="@+id/ln_wifi_off"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/transparent"
-        android:elevation="0dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:titleTextColor="@color/white"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        android:orientation="vertical"
+        android:background="@color/dark_panel_bg_color"
+        android:gravity="center"
+        android:visibility="invisible"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            >
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_wifi_off"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No Internet Connection"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:layout_marginStart="8dp"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvLastUpdated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Last update: 14:24"
+            android:textSize="11sp"
+            android:gravity="center_vertical"
+            android:textColor="@color/grey_text"
+
+            />
+
+    </LinearLayout>
+
+
     <!-- Fixed header section - stays at top -->
     <FrameLayout
         android:id="@+id/line0"
@@ -49,7 +82,7 @@
             app:lottie_rawRes="@raw/thunder"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            android:visibility="visible"
+            android:visibility="invisible"
             android:alpha="0.4" />
         <!-- Nội dung chính -->
         <LinearLayout

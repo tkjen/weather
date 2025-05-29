@@ -9,7 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -35,6 +35,7 @@ import javax.inject.Inject
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import com.tkjen.weather.utils.NetworkHelper
 
 
 @AndroidEntryPoint
@@ -51,7 +52,10 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
         checkAndRequestLocationPermissions()
         setupObservers()
         setupMapView(savedInstanceState)
+
     }
+
+
 
     private fun setupUI() {
         enableEdgeToEdge()
@@ -104,6 +108,20 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show()
             }
         }
+
+        // Observer cho trạng thái mạng
+        viewModel.isOffline.observe(this) { isOffline ->
+            binding.lnWifiOff.apply {
+                visibility = if (isOffline) View.VISIBLE else View.INVISIBLE
+               binding.tvLastUpdated.text = "Last update: ${getCurrentTime()}"
+            }
+        }
+
+    }
+
+    private fun getCurrentTime(): String {
+        val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        return sdf.format(Date())
     }
 
     private fun updateWeatherUI(response: WeatherResponse) {
