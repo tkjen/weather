@@ -136,6 +136,28 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
 
         updateDetailedWeatherInfo(response)
         updateForecastInfo(response)
+        updateWeatherAnimation(response.current.condition.code)
+    }
+    private fun updateWeatherAnimation(weatherCode: Int) {
+        binding.apply {
+            // Hide both animations initially
+            rainAnimation.visibility = View.INVISIBLE
+            thunderAnimation.visibility = View.INVISIBLE
+
+            // Show appropriate animation based on weather code
+            when (weatherCode) {
+                // Rain conditions
+                176, 263, 296, 299, 302, 305, 308, 311, 314, 317, 320, 323, 326, 329, 332, 335, 338, 350, 353, 356, 359, 362, 365, 368, 371, 374, 377 -> {
+                    rainAnimation.visibility = View.VISIBLE
+                    rainAnimation.playAnimation()
+                }
+                // Thunder conditions
+                200, 201, 202, 230, 231, 232, 233, 386, 389 -> {
+                    thunderAnimation.visibility = View.VISIBLE
+                    thunderAnimation.playAnimation()
+                }
+            }
+        }
     }
 
     private fun updateDetailedWeatherInfo(response: WeatherResponse) {
@@ -452,4 +474,6 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
             }
             .show()
     }
+
+
 }
