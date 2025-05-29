@@ -6,6 +6,13 @@
   <img src="https://github.com/user-attachments/assets/d34ea708-d067-4e9e-9250-ab3b9ee15dfc" width="32%" />
 </p>
 
+<p float="left">
+  <img src="https://github.com/user-attachments/assets/36954619-4fb7-43af-b408-8355874ca93c" width="32%" />
+  <img src="https://github.com/user-attachments/assets/136c66fd-0ecc-468f-98d8-329dcc62f71c" width="32%" />
+</p>
+
+
+
 
 
 ## 🎨 Figma Design
