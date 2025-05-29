@@ -152,11 +152,17 @@ class WeatherViewModel @Inject constructor(
             val sunriseTime = formatter.parse(sunrise)
             val sunsetTime = formatter.parse(sunset)
 
-            val durationMillis = sunsetTime.time - sunriseTime.time
-            val hours = TimeUnit.MILLISECONDS.toHours(durationMillis) % 24
-            val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis) % 60
+            if (sunriseTime != null && sunsetTime != null) {
+                val durationMillis = sunsetTime.time - sunriseTime.time
+                // xử lý tiếp
+                val hours = TimeUnit.MILLISECONDS.toHours(durationMillis) % 24
+                val minutes = TimeUnit.MILLISECONDS.toMinutes(durationMillis) % 60
+                String.format("%02d:%02d", hours, minutes)
+            }else{
+                "--:--"
+            }
 
-            String.format("%02d:%02d", hours, minutes)
+
         } catch (e: Exception) {
             Log.e("WeatherViewModel", "Error calculating day duration", e)
             "--:--"

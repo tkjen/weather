@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.tkjen.weather.utils.NetworkHelper
+import android.widget.FrameLayout
 
 
 @AndroidEntryPoint
@@ -170,7 +171,47 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
                 
                 currentRainfall.text = "${response.current.precip_mm} mm"
                 expectedRainfall.text = "${it.day.totalprecip_mm} mm expected in next 24h."
+
+                // Update sun position
+                updateSunPosition(it.astro.sunrise, it.astro.sunset)
             }
+        }
+    }
+
+    private fun updateSunPosition(sunrise: String, sunset: String) {
+        try {
+            val formatter = SimpleDateFormat("hh:mm a", Locale.getDefault())
+            val sunriseTime = formatter.parse(sunrise)
+            val sunsetTime = formatter.parse(sunset)
+            val currentTime = Calendar.getInstance().time
+
+            // Calculate total day duration in milliseconds
+            val totalDayDuration = sunsetTime.time - sunriseTime.time
+            
+            // Calculate current position relative to sunrise
+            val currentPosition = currentTime.time - sunriseTime.time
+            
+            // Calculate percentage of day progress (0.0 to 1.0)
+            val progress = (currentPosition.toFloat() / totalDayDuration.toFloat()).coerceIn(0f, 1f)
+            
+            // Get the FrameLayout width to calculate margin
+            binding.sunPosition.post {
+                val parentFrame = binding.sunPosition.parent as? FrameLayout
+                parentFrame?.let { frame ->
+                    val frameWidth = frame.width
+                    val sunSize = binding.sunPosition.width
+                    
+                    // Calculate margin based on progress (0 to frameWidth - sunSize)
+                    val margin = (progress * (frameWidth - sunSize)).toInt()
+                    
+                    // Update sun position
+                    val params = binding.sunPosition.layoutParams as FrameLayout.LayoutParams
+                    params.marginStart = margin
+                    binding.sunPosition.layoutParams = params
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("WeatherActivity", "Error updating sun position", e)
         }
     }
 
