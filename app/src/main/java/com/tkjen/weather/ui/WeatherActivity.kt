@@ -47,6 +47,7 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
     @Inject
     lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var mapView: MapView
+    private val TAG = "WeatherActivity"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUI()
@@ -233,7 +234,7 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
                 }
             }
         } catch (e: Exception) {
-            Log.e("WeatherActivity", "Error updating sun position", e)
+            Log.e(TAG, "Error updating sun position", e)
         }
     }
 
@@ -257,6 +258,7 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
         // Thêm click listeners
         binding.mapView.setOnClickListener { openMapWithCurrentLocation() }
         binding.seemore.setOnClickListener { openMapWithCurrentLocation() }
+        binding.icMapToolbar.setOnClickListener { openMapWithCurrentLocation() }
         
         // Thêm lifecycle callbacks cho MapView
         lifecycle.addObserver(object : DefaultLifecycleObserver {
@@ -361,15 +363,15 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
 
             when {
                 fineLocationGranted -> {
-                    Log.d("WeatherActivity", "ACCESS_FINE_LOCATION permission granted")
+                    Log.d(TAG, "ACCESS_FINE_LOCATION permission granted")
                     fetchLastLocationAndLoadWeather()
                 }
                 coarseLocationGranted -> {
-                    Log.d("WeatherActivity", "ACCESS_COARSE_LOCATION permission granted")
+                    Log.d(TAG, "ACCESS_COARSE_LOCATION permission granted")
                     fetchLastLocationAndLoadWeather()
                 }
                 else -> {
-                    Log.d("WeatherActivity", "Location permission denied")
+                    Log.d(TAG, "Location permission denied")
                     showPermissionDeniedDialog()
                 }
             }
@@ -384,16 +386,16 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
                 this,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED -> {
-                Log.d("WeatherActivity", "Location permission already granted")
+                Log.d(TAG, "Location permission already granted")
                 fetchLastLocationAndLoadWeather()
             }
             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) ||
                     shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) -> {
-                Log.d("WeatherActivity", "Showing permission rationale")
+                Log.d(TAG, "Showing permission rationale")
                 showPermissionRationaleDialog()
             }
             else -> {
-                Log.d("WeatherActivity", "Requesting location permission")
+                Log.d(TAG, "Requesting location permission")
                 requestLocationPermissionLauncher.launch(
                     arrayOf(
                         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -407,7 +409,7 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
     private fun fetchLastLocationAndLoadWeather() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.w("WeatherActivity", "Attempted to fetch location without permission (should not happen).")
+            Log.w(TAG, "Attempted to fetch location without permission (should not happen).")
             checkAndRequestLocationPermissions()
             return
         }
@@ -416,7 +418,7 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
             .addOnSuccessListener { location: Location? ->
                 if (location != null) {
                     val latLon = "${location.latitude} , ${location.longitude}"
-                    Log.d("WeatherActivity", "Fetched location: $latLon")
+                    Log.d(TAG, "Fetched location: $latLon")
                     binding.icMenuToolbar.setOnClickListener{
                         val location = LatLng(location.latitude, location.longitude)
                         val intent = Intent(this, WeatherListActivity::class.java).apply {
@@ -428,13 +430,13 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
                     viewModel.loadWeather(latLon)
                     Toast.makeText(this, "Location: $latLon", Toast.LENGTH_SHORT).show()
                 } else {
-                    Log.w("WeatherActivity", "Last location is null.")
+                    Log.w(TAG, "Last location is null.")
                     Toast.makeText(this, "Could not retrieve current location.", Toast.LENGTH_LONG).show()
                     viewModel.loadWeather("Ho Chi Minh")
                 }
             }
             .addOnFailureListener { e ->
-                Log.e("WeatherActivity", "Failed to get location", e)
+                Log.e(TAG, "Failed to get location", e)
                 Toast.makeText(this, "Failed to get location.", Toast.LENGTH_LONG).show()
             }
     }
