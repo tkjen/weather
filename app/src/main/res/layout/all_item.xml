@@ -150,9 +150,9 @@
                     android:layout_height="wrap_content"
                     android:text="6:28AM"
                     android:textColor="#FFFFFF"
-                    android:textSize="32sp"
+                    android:textSize="23sp"
                     android:textStyle="normal"
-                    android:layout_marginBottom="12dp" />
+                    android:layout_marginBottom="4dp" />
 
                 <!-- Sun Arc Visual -->
                 <FrameLayout
@@ -184,6 +184,8 @@
                     android:layout_height="wrap_content"
                     android:text="Sunset: 6:10PM"
                     android:textColor="#FFFFFF"
+                    android:visibility="visible"
+                    android:layout_marginTop="0dp"
                     android:textSize="14sp" />
 
             </LinearLayout>

@@ -1,7 +1,7 @@
 package com.tkjen.weather.di
 
-import com.tkjen.weather.BuildConfig
 
+import com.tkjen.weather.BuildConfig
 import com.tkjen.weather.data.api.WeatherApiService
 import dagger.Module
 import dagger.Provides

@@ -165,7 +165,7 @@ class WeatherActivity : AppCompatActivity(R.layout.activity_weather), OnMapReady
             binding.apply {
                 tvHighLowTemp.text = "H:${it.day.maxtemp_c.toInt()}° L:${it.day.mintemp_c.toInt()}°"
                 
-                sunsetTime.text = it.astro.sunset
+                sunsetTime.text = "Sunset: ${it.astro.sunset}"
                 sunriseTime.text = it.astro.sunrise
                 
                 currentRainfall.text = "${response.current.precip_mm} mm"

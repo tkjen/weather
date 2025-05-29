@@ -482,7 +482,6 @@
 
                     </androidx.cardview.widget.CardView>
 
-                    <!-- Sunrise Card -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="160dp"
@@ -490,14 +489,13 @@
                         android:layout_marginStart="6dp"
                         app:cardCornerRadius="12dp"
                         app:cardElevation="0dp"
-                        app:cardBackgroundColor="#262C2C2E">
+                        app:cardBackgroundColor="#802D2D2D">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:padding="16dp"
-                            android:background="#262C2C2E">
+                            android:padding="16dp">
 
                             <!-- Sunrise Header -->
                             <LinearLayout
@@ -532,10 +530,9 @@
                                 android:layout_height="wrap_content"
                                 android:text="6:28AM"
                                 android:textColor="#FFFFFF"
-                                android:textSize="32sp"
+                                android:textSize="23sp"
                                 android:textStyle="normal"
-                                android:layout_marginBottom="12dp" />
-
+                                android:layout_marginBottom="4dp" />
 
                             <!-- Sun Arc Visual -->
                             <FrameLayout
@@ -558,7 +555,6 @@
                                     android:layout_marginStart="20dp"
                                     android:layout_marginBottom="2dp" />
 
-
                             </FrameLayout>
 
                             <!-- Sunset Time -->
@@ -566,11 +562,11 @@
                                 android:id="@+id/sunset_time"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="6:10PM"
+                                android:text="Sunset: 6:10PM"
                                 android:textColor="#FFFFFF"
-                                android:textSize="14sp"
-                                android:layout_gravity="center_horizontal"
-                                android:layout_marginTop="2dp" />
+                                android:visibility="visible"
+                                android:layout_marginTop="0dp"
+                                android:textSize="14sp" />
 
                         </LinearLayout>
 
