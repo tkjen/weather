@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tkjen.weather.R
+import com.tkjen.weather.utils.Result
 import com.tkjen.weather.data.repository.WeatherRepository
 import com.tkjen.weather.data.model.DayForecast
 import com.tkjen.weather.data.model.HourlyWeather
@@ -38,7 +39,7 @@ class WeatherViewModel @Inject constructor(
     fun loadWeather(location: String) {
         viewModelScope.launch {
             when (val result = repository.getWeatherData(location)) {
-                is WeatherRepository.Result.Success -> {
+                is Result.Success -> {
                     val weatherResponse = result.data
                     _weather.postValue(weatherResponse)
                     _errorMessage.postValue(null)
@@ -93,10 +94,11 @@ class WeatherViewModel @Inject constructor(
                     _dailyForecast.postValue(daily)
 
                 }
-                is WeatherRepository.Result.Error -> {
+                is Result.Error -> {
                     Log.e("WeatherViewModel", "Error loading weather: ${result.message}")
                     _errorMessage.postValue(result.message)
                 }
+                else -> Unit
             }
         }
     }
