@@ -1,3 +1,93 @@
+# Apple Weather Clone
+
+A modern Android weather application built with Kotlin that provides detailed weather information and forecasts. This app is inspired by Apple's Weather app design and functionality.
+
+## Features
+
+- 🌍 **Current Weather**
+  - Real-time temperature display
+  - Weather condition with animations
+  - Feels like temperature
+  - Humidity and UV index
+  - Wind speed and direction
+  - Precipitation information
+
+- 📅 **Forecast Information**
+  - Hourly weather forecast
+  - Daily weather forecast
+  - High and low temperatures
+  - Sunrise and sunset times
+  - Visual sun position indicator
+
+- 📍 **Location Features**
+  - Current location weather
+  - Google Maps integration
+  - Location permission handling
+  - Multiple location support
+
+- 🎨 **UI/UX**
+  - Modern Material Design
+  - Smooth animations
+  - Interactive weather maps
+  - Responsive layout
+  - Dark/Light theme support
+
+## Technical Details
+
+### Built With
+- Kotlin
+- Android Jetpack
+- MVVM Architecture
+- Dagger Hilt for Dependency Injection
+- Google Maps API
+- Material Design Components
+
+### Requirements
+- Android 6.0 (API level 23) or higher
+- Google Play Services
+- Location permissions
+- Internet connection
+
+## Setup
+
+1. Clone the repository
+```bash
+git clone https://github.com/yourusername/apple-weather.git
+```
+
+2. Open the project in Android Studio
+
+3. Add your Google Maps API key in `local.properties`:
+```properties
+MAPS_API_KEY=your_api_key_here
+```
+
+4. Build and run the application
+
+## Permissions
+
+The app requires the following permissions:
+- Location (Fine and Coarse)
+- Internet
+- Network State
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Weather data provided by [WeatherAPI](https://www.weatherapi.com/)
+- Icons and animations from [Lottie](https://lottiefiles.com/)
+- Maps integration powered by Google Maps API
 
 ## ✨ Preview
 <p float="left">
