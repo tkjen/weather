@@ -52,7 +52,7 @@ A modern Android weather application built with Kotlin that provides detailed we
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/apple-weather.git
+git clone https://github.com/tkjen/apple-weather.git
 ```
 
 2. Open the project in Android Studio
